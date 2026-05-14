@@ -466,11 +466,6 @@
     color: white; padding: 12px 28px; border-radius: 100px;
     font-weight: 700; font-size: 16px;
   }
-  /* On mobile/small screens - hide iframe and show card */
-  @media (max-width: 768px) {
-    #galleryWrapper { display: none; }
-    .gallery-mobile-card { display: block; }
-  }
 </style>
 </head>
 <body>
@@ -795,43 +790,11 @@
     <h2>📸 גלריית תמונות מהמחזור</h2>
     <p class="section-subtitle">מאגר משותף - כל אחד יכול להעלות ולהוריד תמונות. בואו נכנס למצב נוסטלגיה 💜</p>
 
-    <div class="gallery-actions">
-      <button class="btn btn-upload" onclick="openDriveUpload()">
-        <span style="font-size: 22px;">📤</span>
-        <span>העלו תמונות שלכם</span>
-      </button>
-      <a href="https://drive.google.com/drive/folders/10EmIZRjMfjojzqGqa3XuMV582eWNtprB" target="_blank"
-         class="btn btn-view-gallery" style="text-decoration:none;">
-        <span style="font-size: 22px;">🖼️</span>
-        <span>פתחו גלריה במלוא המסך</span>
-      </a>
-      <button class="btn btn-refresh-gallery" onclick="refreshGallery()" title="רענן">
-        <span style="font-size: 18px;">🔄</span>
-      </button>
-    </div>
-
-    <div class="gallery-info">
-      💡 <strong>איך זה עובד:</strong> לחיצה על "העלו תמונות" תפתח את התיקייה ב-Drive.
-      להורדת תמונה ספציפית - לחצו עליה כדי לפתוח אותה ב-Drive ושם תוכלו להוריד.
-      📱 <strong>במובייל:</strong> אם הגלריה לא נטענת - לחצו על "פתחו גלריה במלוא המסך".
-    </div>
-
-    <!-- Desktop: iframe gallery preview -->
-    <div class="gallery-wrapper" id="galleryWrapper">
-      <iframe
-        id="galleryFrame"
-        src="https://drive.google.com/embeddedfolderview?id=10EmIZRjMfjojzqGqa3XuMV582eWNtprB#grid"
-        frameborder="0"
-        style="width:100%; height:600px; border-radius: 16px; background: var(--bg-card);">
-      </iframe>
-    </div>
-
-    <!-- Mobile: friendly card instead of broken iframe -->
-    <a id="galleryMobileCard" href="https://drive.google.com/drive/folders/10EmIZRjMfjojzqGqa3XuMV582eWNtprB"
-       target="_blank" class="gallery-mobile-card">
+    <a href="https://drive.google.com/drive/folders/10EmIZRjMfjojzqGqa3XuMV582eWNtprB"
+       target="_blank" class="gallery-mobile-card" style="display: block;">
       <div class="gallery-mobile-icon">📸</div>
-      <div class="gallery-mobile-title">פתחו את הגלריה</div>
-      <div class="gallery-mobile-sub">לחצו לצפייה ולהעלאת תמונות ב-Google Drive</div>
+      <div class="gallery-mobile-title">פתחו את הגלריה ב-Drive</div>
+      <div class="gallery-mobile-sub">לצפייה בתמונות והעלאת תמונות חדשות שלכם</div>
       <div class="gallery-mobile-btn">פתח גלריה ←</div>
     </a>
 
