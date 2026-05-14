@@ -621,6 +621,20 @@
           <div class="added-dates" id="blackoutDatesList"></div>
         </div>
 
+        <!-- Q6b: Blackout ranges -->
+        <div class="survey-step">
+          <h3>🚫 טווח תאריכים שאני לא זמין (אופציונלי)</h3>
+          <div class="hint">למשל: חופשה מ-10/12 עד 20/12, מילואים, וכו'</div>
+          <div class="date-input-row date-range-row">
+            <span style="color: var(--text-muted); font-size: 13px;">מתאריך</span>
+            <input type="date" id="blackoutRangeFromInput" min="2026-07-01" max="2026-12-31">
+            <span style="color: var(--text-muted); font-size: 13px;">עד תאריך</span>
+            <input type="date" id="blackoutRangeToInput" min="2026-07-01" max="2026-12-31">
+            <button class="btn-add-date" onclick="addBlackoutRange()">+ הוסף</button>
+          </div>
+          <div class="added-dates" id="blackoutRangesList"></div>
+        </div>
+
       </div>
     </section>
 
@@ -897,6 +911,7 @@ let selTimes = new Set();
 let specificDates = [];
 let blackoutDates = [];
 let dateRanges = [];
+let blackoutRanges = [];
 let selSpouse = null;
 let selLocation = null;
 let selSponsor = null;
@@ -1198,6 +1213,26 @@ function renderDateRanges() {
     </div>`).join('');
 }
 
+function addBlackoutRange() {
+  const from = document.getElementById('blackoutRangeFromInput').value;
+  const to = document.getElementById('blackoutRangeToInput').value;
+  if (!from || !to) { alert('יש לבחור גם תאריך התחלה וגם תאריך סיום'); return; }
+  if (from > to) { alert('תאריך הסיום חייב להיות אחרי תאריך ההתחלה'); return; }
+  if (blackoutRanges.some(r => r.from === from && r.to === to)) { alert('כבר הוספת את הטווח הזה'); return; }
+  blackoutRanges.push({ from, to });
+  document.getElementById('blackoutRangeFromInput').value = '';
+  document.getElementById('blackoutRangeToInput').value = '';
+  renderBlackoutRanges();
+}
+function removeBlackoutRange(idx) { blackoutRanges.splice(idx, 1); renderBlackoutRanges(); }
+function renderBlackoutRanges() {
+  document.getElementById('blackoutRangesList').innerHTML = blackoutRanges.map((r, i) =>
+    `<div class="added-date-row blackout">
+      <span>${formatNiceDate(r.from)} ← ${formatNiceDate(r.to)}</span>
+      <button class="added-date-remove" onclick="removeBlackoutRange(${i})">×</button>
+    </div>`).join('');
+}
+
 function renderDateList(elId, list, removeFn, blackout) {
   document.getElementById(elId).innerHTML = list.map((d, i) =>
     `<div class="added-date-row ${blackout ? 'blackout' : ''}">
@@ -1223,6 +1258,7 @@ function showRegisteredView(reg) {
     if (av.specificDates?.length) parts.push('✅ ' + av.specificDates.length + ' תאריכים ספציפיים');
     if (av.dateRanges?.length) parts.push('🗓️ ' + av.dateRanges.length + ' טווח' + (av.dateRanges.length > 1 ? 'י' : '') + ' תאריכים');
     if (av.blackoutDates?.length) parts.push('❌ ' + av.blackoutDates.length + ' תאריכים חסומים');
+    if (av.blackoutRanges?.length) parts.push('🚫 ' + av.blackoutRanges.length + ' טווח' + (av.blackoutRanges.length > 1 ? 'י' : '') + ' לא זמין');
   }
   const loc = LOCATION_LABELS[reg.location || av.location];
   if (loc) parts.push('📍 ' + loc);
@@ -1273,6 +1309,7 @@ function loadIntoForm(reg, isViaSearch) {
   specificDates = [...(av.specificDates || [])];
   blackoutDates = [...(av.blackoutDates || [])];
   dateRanges = [...(av.dateRanges || [])];
+  blackoutRanges = [...(av.blackoutRanges || [])];
   selSpouse = reg.spouse;
   selLocation = reg.location || null;
   selSponsor = reg.sponsorship?.interested || null;
@@ -1296,6 +1333,7 @@ function loadIntoForm(reg, isViaSearch) {
   renderDateList('specificDatesList', specificDates, 'removeSpecificDate', false);
   renderDateList('blackoutDatesList', blackoutDates, 'removeBlackoutDate', true);
   renderDateRanges();
+  renderBlackoutRanges();
 
   document.querySelectorAll('#spouseToggle .toggle-option').forEach(e => e.classList.toggle('selected', e.dataset.value === selSpouse));
   document.querySelectorAll('[data-location]').forEach(e => e.classList.toggle('selected', e.dataset.location === selLocation));
@@ -1320,7 +1358,7 @@ function loadIntoForm(reg, isViaSearch) {
 function cancelEdit() {
   editingId = null; isFlexible = false;
   selMonths.clear(); selWeeks.clear(); selDays.clear(); selTimes.clear();
-  specificDates = []; blackoutDates = []; dateRanges = [];
+  specificDates = []; blackoutDates = []; dateRanges = []; blackoutRanges = [];
   selSpouse = null; selLocation = null; selSponsor = null; selSponsorTypes.clear();
 
   ['firstName','lastName','phone','email','originalName','notes','sponsorDetailsText'].forEach(id => document.getElementById(id).value = '');
@@ -1332,6 +1370,7 @@ function cancelEdit() {
   document.getElementById('submitBtnText').textContent = 'שלחו את התשובות ✨';
   document.getElementById('specificDatesList').innerHTML = '';
   document.getElementById('dateRangesList').innerHTML = '';
+  document.getElementById('blackoutRangesList').innerHTML = '';
   document.getElementById('blackoutDatesList').innerHTML = '';
   // Restore the edit link visibility for the form view
   const eLink = document.getElementById('editExistingLink');
@@ -1394,6 +1433,7 @@ async function submitForm() {
     specificDates: [...specificDates],
     blackoutDates: [...blackoutDates],
     dateRanges: [...dateRanges],
+    blackoutRanges: [...blackoutRanges],
     location: selLocation,  // packed into availability so it saves to sheet
     email: email             // also packed (no separate column needed)
   };
