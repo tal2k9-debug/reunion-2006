@@ -436,7 +436,6 @@
   <div class="stats-row">
     <div class="stat-mini"><div class="stat-mini-num" id="totalRegistered">0</div><div class="stat-mini-label">משתתפים ענו</div></div>
     <div class="stat-mini"><div class="stat-mini-num" id="totalFlexible">0</div><div class="stat-mini-label">גמישים (כל תאריך)</div></div>
-    <div class="stat-mini"><div class="stat-mini-num" id="totalSponsors">0</div><div class="stat-mini-label">מעוניינים בחסות</div></div>
   </div>
 
   <!-- ===== Form ===== -->
@@ -1234,8 +1233,6 @@ function updateLiveResults() {
   document.getElementById('totalRegistered').textContent = registrations.length;
   const flexibleCount = registrations.filter(r => r.dates?.flexible).length;
   document.getElementById('totalFlexible').textContent = flexibleCount;
-  const sponsorCount = registrations.filter(r => r.sponsorship && (r.sponsorship.interested === 'yes' || r.sponsorship.interested === 'maybe')).length;
-  document.getElementById('totalSponsors').textContent = sponsorCount;
 
   document.getElementById('liveCount').textContent = `${registrations.length} משתתפים ענו`;
 
@@ -1258,7 +1255,9 @@ function updateLiveResults() {
 
   if (withPrefs.length === 0) {
     infoBanner.style.display = 'block';
-    infoBanner.textContent = `🎲 כל ${registrations.length} המשתתפים סימנו "אני גמיש". המנהל יוכל לקבוע כל תאריך - כולכם תגיעו!`;
+    infoBanner.textContent = registrations.length === 1
+      ? `🎲 עד עכשיו ענה משתתף אחד והוא סימן "גמיש". מחכים שיענו עוד.`
+      : `🎲 כל ${registrations.length} המשתתפים שענו עד כה סימנו "גמיש" - זמינים לכל תאריך. מחכים שיענו עוד.`;
     list.innerHTML = '';
     return;
   }
