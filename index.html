@@ -216,6 +216,31 @@
   /* Stats preview */
   .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; }
   @media (max-width: 600px) { .stats-row { grid-template-columns: 1fr; } }
+  /* Fun stats */
+  .fun-stats {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 20px; padding: 22px 26px; margin: 24px 0;
+    display: none;
+  }
+  .fun-stats.show { display: block; }
+  .fun-stats-header { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .fun-stats-icon { font-size: 24px; }
+  .fun-stats-title { font-weight: 700; font-size: 17px; color: var(--accent); }
+  .fun-stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+  .fun-stat {
+    background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border);
+    border-radius: 14px; padding: 16px;
+    transition: all 0.3s;
+  }
+  .fun-stat:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .fun-stat-emoji { font-size: 28px; margin-bottom: 6px; }
+  .fun-stat-label { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
+  .fun-stat-value { font-weight: 700; font-size: 16px; color: var(--text); }
+  .fun-stat-extra { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
   .stat-mini {
     background: var(--bg-card); border: 1px solid var(--border);
     border-radius: 14px; padding: 18px; text-align: center;
@@ -482,6 +507,15 @@
   <div class="stats-row">
     <div class="stat-mini"><div class="stat-mini-num" id="totalRegistered">0</div><div class="stat-mini-label">משתתפים ענו</div></div>
     <div class="stat-mini"><div class="stat-mini-num" id="totalFlexible">0</div><div class="stat-mini-label">גמישים (כל תאריך)</div></div>
+  </div>
+
+  <!-- ===== Fun Stats ===== -->
+  <div class="fun-stats" id="funStatsContainer">
+    <div class="fun-stats-header">
+      <span class="fun-stats-icon">🔍</span>
+      <span class="fun-stats-title">מעניין לדעת על המחזור...</span>
+    </div>
+    <div class="fun-stats-grid" id="funStatsGrid"></div>
   </div>
 
   <!-- ===== Form ===== -->
@@ -903,6 +937,120 @@ async function init() {
   await syncFromSheets();
   checkRegisteredUser();
   if (GOOGLE_SHEETS_URL) setInterval(syncFromSheets, 30000);
+}
+
+// ============ Fun Public Stats ============
+function updateFunStats() {
+  const container = document.getElementById('funStatsContainer');
+  const grid = document.getElementById('funStatsGrid');
+  if (!container || !grid) return;
+
+  // Only show if at least 2 participants have answered (avoid embarrassing 100% stats with 1 person)
+  if (registrations.length < 2) {
+    container.classList.remove('show');
+    return;
+  }
+
+  const stats = [];
+
+  // 1) Where do most people live (top location)
+  const locCounts = {};
+  registrations.forEach(r => {
+    const loc = r.location || r.dates?.location;
+    if (loc) locCounts[loc] = (locCounts[loc] || 0) + 1;
+  });
+  const sortedLocs = Object.entries(locCounts).sort((a, b) => b[1] - a[1]);
+  if (sortedLocs.length > 0) {
+    const [topLoc, topCount] = sortedLocs[0];
+    const pct = Math.round((topCount / registrations.length) * 100);
+    stats.push({
+      emoji: '🗺️',
+      label: 'איפה רוב המשתתפים גרים?',
+      value: LOCATION_LABELS[topLoc] || topLoc,
+      extra: `${pct}% (${topCount} משתתפים)`
+    });
+  }
+
+  // 2) Top preferred month
+  const monthCounts = {};
+  registrations.forEach(r => {
+    (r.dates?.months || []).forEach(m => { monthCounts[m] = (monthCounts[m] || 0) + 1; });
+  });
+  const sortedMonths = Object.entries(monthCounts).sort((a, b) => b[1] - a[1]);
+  if (sortedMonths.length > 0) {
+    const [topMonth, topCount] = sortedMonths[0];
+    const monthLabel = MONTHS.find(m => m.key === topMonth)?.label || topMonth;
+    stats.push({
+      emoji: '📅',
+      label: 'החודש המבוקש ביותר',
+      value: monthLabel,
+      extra: `${topCount} בחרו אותו`
+    });
+  }
+
+  // 3) % bringing partner
+  const withPartner = registrations.filter(r => r.spouse === 'yes').length;
+  const maybePartner = registrations.filter(r => r.spouse === 'maybe').length;
+  const partnerPct = Math.round((withPartner / registrations.length) * 100);
+  stats.push({
+    emoji: '👫',
+    label: 'מגיעים עם בן/בת זוג',
+    value: `${partnerPct}%`,
+    extra: `${withPartner} בטוח${maybePartner ? ` + ${maybePartner} אולי` : ''}`
+  });
+
+  // 4) Expected attendance (count + spouses)
+  const totalAttendees = registrations.length + withPartner + Math.round(maybePartner * 0.5);
+  stats.push({
+    emoji: '🎉',
+    label: 'צפי משתתפים כולל',
+    value: `~${totalAttendees}`,
+    extra: 'כולל בני/בנות זוג'
+  });
+
+  // 5) Top preferred time of day
+  const timeCounts = {};
+  registrations.forEach(r => {
+    (r.dates?.times || []).forEach(t => { timeCounts[t] = (timeCounts[t] || 0) + 1; });
+  });
+  const sortedTimes = Object.entries(timeCounts).sort((a, b) => b[1] - a[1]);
+  if (sortedTimes.length > 0) {
+    const [topTime, topCount] = sortedTimes[0];
+    stats.push({
+      emoji: '⏰',
+      label: 'הזמן המועדף',
+      value: TIME_LABELS[topTime] || topTime,
+      extra: `${topCount} בחרו זאת`
+    });
+  }
+
+  // 6) Top preferred day of week
+  const dayCounts = {};
+  registrations.forEach(r => {
+    (r.dates?.days || []).forEach(d => { dayCounts[d] = (dayCounts[d] || 0) + 1; });
+  });
+  const sortedDays = Object.entries(dayCounts).sort((a, b) => b[1] - a[1]);
+  if (sortedDays.length > 0) {
+    const [topDay, topCount] = sortedDays[0];
+    stats.push({
+      emoji: '🗓️',
+      label: 'היום המועדף',
+      value: DAY_NAMES[parseInt(topDay)],
+      extra: `${topCount} בחרו אותו`
+    });
+  }
+
+  // Render
+  grid.innerHTML = stats.map(s => `
+    <div class="fun-stat">
+      <div class="fun-stat-emoji">${s.emoji}</div>
+      <div class="fun-stat-label">${s.label}</div>
+      <div class="fun-stat-value">${s.value}</div>
+      <div class="fun-stat-extra">${s.extra}</div>
+    </div>
+  `).join('');
+
+  container.classList.add('show');
 }
 
 // ============ Visitor Statistics ============
@@ -1331,6 +1479,8 @@ function updateLiveResults() {
   // Update the small registered counter in the top corner widget
   const regCounter = document.getElementById('registeredCount');
   if (regCounter) regCounter.textContent = registrations.length.toLocaleString();
+  // Update interesting public stats
+  updateFunStats();
 
   document.getElementById('liveCount').textContent = `${registrations.length} משתתפים ענו`;
 
