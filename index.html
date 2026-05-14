@@ -436,6 +436,41 @@
     border-radius: 12px; padding: 14px 18px; font-size: 13px; color: var(--text-muted); margin-bottom: 16px;
   }
   .gallery-wrapper { border-radius: 16px; overflow: hidden; }
+  .btn-view-gallery {
+    flex: 1; min-width: 200px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white; border: none;
+    padding: 16px 20px; border-radius: 14px; font-size: 16px; font-weight: 700;
+    cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    transition: all 0.2s; font-family: inherit;
+  }
+  .btn-view-gallery:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4); }
+  /* Mobile card replaces iframe on mobile */
+  .gallery-mobile-card {
+    display: none;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%);
+    border: 2px dashed rgba(16, 185, 129, 0.5);
+    border-radius: 20px; padding: 40px 24px; text-align: center;
+    text-decoration: none; color: var(--text);
+    transition: all 0.3s;
+  }
+  .gallery-mobile-card:hover, .gallery-mobile-card:active {
+    transform: scale(1.02); border-color: var(--success);
+  }
+  .gallery-mobile-icon { font-size: 64px; margin-bottom: 16px; }
+  .gallery-mobile-title { font-weight: 800; font-size: 22px; margin-bottom: 6px; color: var(--text); }
+  .gallery-mobile-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; }
+  .gallery-mobile-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--success), #06b6d4);
+    color: white; padding: 12px 28px; border-radius: 100px;
+    font-weight: 700; font-size: 16px;
+  }
+  /* On mobile/small screens - hide iframe and show card */
+  @media (max-width: 768px) {
+    #galleryWrapper { display: none; }
+    .gallery-mobile-card { display: block; }
+  }
 </style>
 </head>
 <body>
@@ -765,17 +800,24 @@
         <span style="font-size: 22px;">📤</span>
         <span>העלו תמונות שלכם</span>
       </button>
+      <a href="https://drive.google.com/drive/folders/10EmIZRjMfjojzqGqa3XuMV582eWNtprB" target="_blank"
+         class="btn btn-view-gallery" style="text-decoration:none;">
+        <span style="font-size: 22px;">🖼️</span>
+        <span>פתחו גלריה במלוא המסך</span>
+      </a>
       <button class="btn btn-refresh-gallery" onclick="refreshGallery()" title="רענן">
         <span style="font-size: 18px;">🔄</span>
       </button>
     </div>
 
     <div class="gallery-info">
-      💡 <strong>איך זה עובד:</strong> לחיצה על "העלה תמונות" תפתח את התיקייה ב-Drive.
+      💡 <strong>איך זה עובד:</strong> לחיצה על "העלו תמונות" תפתח את התיקייה ב-Drive.
       להורדת תמונה ספציפית - לחצו עליה כדי לפתוח אותה ב-Drive ושם תוכלו להוריד.
+      📱 <strong>במובייל:</strong> אם הגלריה לא נטענת - לחצו על "פתחו גלריה במלוא המסך".
     </div>
 
-    <div class="gallery-wrapper">
+    <!-- Desktop: iframe gallery preview -->
+    <div class="gallery-wrapper" id="galleryWrapper">
       <iframe
         id="galleryFrame"
         src="https://drive.google.com/embeddedfolderview?id=10EmIZRjMfjojzqGqa3XuMV582eWNtprB#grid"
@@ -783,6 +825,15 @@
         style="width:100%; height:600px; border-radius: 16px; background: var(--bg-card);">
       </iframe>
     </div>
+
+    <!-- Mobile: friendly card instead of broken iframe -->
+    <a id="galleryMobileCard" href="https://drive.google.com/drive/folders/10EmIZRjMfjojzqGqa3XuMV582eWNtprB"
+       target="_blank" class="gallery-mobile-card">
+      <div class="gallery-mobile-icon">📸</div>
+      <div class="gallery-mobile-title">פתחו את הגלריה</div>
+      <div class="gallery-mobile-sub">לחצו לצפייה ולהעלאת תמונות ב-Google Drive</div>
+      <div class="gallery-mobile-btn">פתח גלריה ←</div>
+    </a>
 
   </section>
 
