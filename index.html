@@ -19,6 +19,36 @@
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #312e81 100%);
     min-height: 100vh; color: var(--text); overflow-x: hidden;
   }
+  /* Visitor stats widget */
+  .visitor-stats {
+    position: fixed; top: 16px; left: 16px; z-index: 100;
+    display: flex; flex-direction: column; gap: 8px;
+    pointer-events: none;
+  }
+  .stat-pill {
+    background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(10px);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 100px; padding: 8px 14px;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600; color: var(--text);
+    transition: all 0.3s;
+    pointer-events: auto;
+  }
+  .stat-pill:hover { transform: scale(1.05); border-color: var(--primary); }
+  .stat-pill .stat-num { font-weight: 800; color: var(--primary); font-size: 14px; }
+  .stat-pill.online .stat-num { color: var(--success); }
+  .stat-pill .pulse-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--success);
+    animation: pulse-stat 2s infinite;
+  }
+  @keyframes pulse-stat {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+  }
+  @media (max-width: 600px) {
+    .visitor-stats { top: 8px; left: 8px; }
+    .stat-pill { padding: 6px 10px; font-size: 11px; }
+  }
   .bg-blobs { position: fixed; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
   .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; animation: float 20s ease-in-out infinite; }
   .blob1 { width: 400px; height: 400px; background: var(--primary); top: -100px; right: -100px; }
@@ -381,6 +411,20 @@
 </head>
 <body>
 
+<!-- ====== Visitor Stats Widget ====== -->
+<div class="visitor-stats">
+  <div class="stat-pill" title="סך הכל ביקורים בעמוד">
+    <span>👁️</span>
+    <span class="stat-num" id="totalVisits">···</span>
+    <span>כניסות</span>
+  </div>
+  <div class="stat-pill online" title="פעילים בעמוד כעת">
+    <span class="pulse-dot"></span>
+    <span class="stat-num" id="onlineNow">···</span>
+    <span>פעילים כעת</span>
+  </div>
+</div>
+
 <div class="bg-blobs">
   <div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div>
 </div>
@@ -540,6 +584,10 @@
         <div class="form-row">
           <div class="form-group"><label for="phone">טלפון *</label><input type="tel" id="phone" placeholder="050-1234567" required></div>
           <div class="form-group"><label for="originalName">שם משפחה במחזור (אם השתנה)</label><input type="text" id="originalName" placeholder="אופציונלי"></div>
+        </div>
+        <div class="form-group">
+          <label for="email">📧 מייל (לקבלת עדכונים על האירוע)</label>
+          <input type="email" id="email" placeholder="אופציונלי - example@gmail.com" autocomplete="email">
         </div>
 
         <div class="form-group">
@@ -849,9 +897,70 @@ async function init() {
   setupSponsorToggle();
   setupSponsorTypes();
   updateLiveResults();
+  trackVisitorStats(); // visit counter + online users
   await syncFromSheets();
   checkRegisteredUser();
   if (GOOGLE_SHEETS_URL) setInterval(syncFromSheets, 30000);
+}
+
+// ============ Visitor Statistics ============
+async function trackVisitorStats() {
+  const NAMESPACE = 'reunion2006tal';
+  const visitsEl = document.getElementById('totalVisits');
+  const onlineEl = document.getElementById('onlineNow');
+  // Use abacus.jasoncameron.dev - free, no auth, reliable counter
+  try {
+    // Total visits - increment once per session
+    if (!sessionStorage.getItem('reunion_visit_counted')) {
+      const r = await fetch(`https://abacus.jasoncameron.dev/hit/${NAMESPACE}/visits`);
+      const d = await r.json();
+      visitsEl.textContent = (d.value || 1).toLocaleString();
+      sessionStorage.setItem('reunion_visit_counted', '1');
+    } else {
+      const r = await fetch(`https://abacus.jasoncameron.dev/get/${NAMESPACE}/visits`);
+      const d = await r.json();
+      visitsEl.textContent = (d.value || 1).toLocaleString();
+    }
+  } catch (e) { visitsEl.textContent = '—'; }
+
+  // Online users - heartbeat approach
+  try {
+    // Increment online counter on entry
+    const r = await fetch(`https://abacus.jasoncameron.dev/hit/${NAMESPACE}/online`);
+    const d = await r.json();
+    onlineEl.textContent = Math.max(1, d.value % 100); // mod to keep reasonable
+
+    // Decrement on unload
+    const decrementOnExit = () => {
+      try {
+        const url = `https://abacus.jasoncameron.dev/hit/${NAMESPACE}/online_left`;
+        if (navigator.sendBeacon) navigator.sendBeacon(url);
+        else fetch(url, { keepalive: true });
+      } catch(_) {}
+    };
+    window.addEventListener('beforeunload', decrementOnExit);
+    window.addEventListener('pagehide', decrementOnExit);
+
+    // Estimate active users: visits in last 5 min minus exits in last 5 min, with minimum 1
+    setInterval(async () => {
+      try {
+        const [h, l] = await Promise.all([
+          fetch(`https://abacus.jasoncameron.dev/get/${NAMESPACE}/online`).then(r => r.json()),
+          fetch(`https://abacus.jasoncameron.dev/get/${NAMESPACE}/online_left`).then(r => r.json())
+        ]);
+        const active = Math.max(1, (h.value || 0) - (l.value || 0));
+        onlineEl.textContent = active.toLocaleString();
+      } catch(_) {}
+    }, 15000);
+
+    // Initial active estimate
+    try {
+      const lr = await fetch(`https://abacus.jasoncameron.dev/get/${NAMESPACE}/online_left`);
+      const ld = await lr.json();
+      const active = Math.max(1, (d.value || 0) - (ld.value || 0));
+      onlineEl.textContent = active.toLocaleString();
+    } catch(_) {}
+  } catch (e) { onlineEl.textContent = '—'; }
 }
 
 function checkRegisteredUser() {
@@ -970,6 +1079,8 @@ function showRegisteredView(reg) {
   }
   const loc = LOCATION_LABELS[reg.location || av.location];
   if (loc) parts.push('📍 ' + loc);
+  const emailVal = reg.email || av.email;
+  if (emailVal) parts.push('📧 ' + emailVal);
   const spouseTxt = { yes: 'מגיע/ה עם בן/בת זוג', no: 'מגיע/ה לבד', maybe: 'עדיין לא יודע/ת אם עם בן/בת זוג' }[reg.spouse];
   if (spouseTxt) parts.push('👫 ' + spouseTxt);
   if (reg.sponsorship?.interested === 'yes') parts.push('💎 מעוניין/ת בחסות');
@@ -1022,6 +1133,7 @@ function loadIntoForm(reg, isViaSearch) {
   document.getElementById('firstName').value = reg.firstName || '';
   document.getElementById('lastName').value = reg.lastName || '';
   document.getElementById('phone').value = reg.phone || '';
+  document.getElementById('email').value = reg.email || av.email || '';
   document.getElementById('originalName').value = reg.originalName || '';
   document.getElementById('notes').value = reg.notes || '';
   document.getElementById('sponsorDetailsText').value = reg.sponsorship?.details || '';
@@ -1059,7 +1171,7 @@ function cancelEdit() {
   specificDates = []; blackoutDates = [];
   selSpouse = null; selLocation = null; selSponsor = null; selSponsorTypes.clear();
 
-  ['firstName','lastName','phone','originalName','notes','sponsorDetailsText'].forEach(id => document.getElementById(id).value = '');
+  ['firstName','lastName','phone','email','originalName','notes','sponsorDetailsText'].forEach(id => document.getElementById(id).value = '');
   document.querySelectorAll('.pill, .day-pill, .toggle-option, .sponsor-type').forEach(e => e.classList.remove('selected'));
   document.getElementById('flexibleCard').classList.remove('active');
   document.getElementById('surveyDetails').style.display = 'block';
@@ -1102,11 +1214,13 @@ async function submitForm() {
   const firstName = document.getElementById('firstName').value.trim();
   const lastName = document.getElementById('lastName').value.trim();
   const phone = document.getElementById('phone').value.trim();
+  const email = document.getElementById('email').value.trim();
   const originalName = document.getElementById('originalName').value.trim();
   const notes = document.getElementById('notes').value.trim();
   const sponsorDetails = document.getElementById('sponsorDetailsText').value.trim();
 
   if (!firstName || !lastName || !phone) { alert('אנא מלאו שם פרטי, שם משפחה וטלפון'); return; }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('כתובת המייל לא תקינה. בדקו את הפורמט (example@gmail.com)'); return; }
   if (!selSpouse) { alert('אנא ציינו אם תגיעו עם בן/בת זוג'); return; }
 
   // If not flexible, require at least one answer
@@ -1123,7 +1237,8 @@ async function submitForm() {
     times: Array.from(selTimes),
     specificDates: [...specificDates],
     blackoutDates: [...blackoutDates],
-    location: selLocation  // packed into availability so it saves to sheet
+    location: selLocation,  // packed into availability so it saves to sheet
+    email: email             // also packed (no separate column needed)
   };
   const sponsorship = selSponsor ? { interested: selSponsor, types: Array.from(selSponsorTypes), details: sponsorDetails } : null;
 
@@ -1137,7 +1252,7 @@ async function submitForm() {
   if (editingId) {
     const idx = registrations.findIndex(r => r.id === editingId);
     if (idx >= 0) {
-      record = { ...registrations[idx], firstName, lastName, phone, originalName, notes, dates: availability, spouse: selSpouse, location: selLocation, sponsorship, updatedAt: new Date().toISOString() };
+      record = { ...registrations[idx], firstName, lastName, phone, email, originalName, notes, dates: availability, spouse: selSpouse, location: selLocation, sponsorship, updatedAt: new Date().toISOString() };
       registrations[idx] = record;
       isUpdate = true;
     }
@@ -1150,7 +1265,7 @@ async function submitForm() {
       submitBtn.disabled = false; btnText.textContent = originalText;
       return submitForm();
     }
-    record = { id: 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), firstName, lastName, phone, originalName, notes, dates: availability, spouse: selSpouse, location: selLocation, sponsorship, timestamp: new Date().toISOString(), updatedAt: new Date().toISOString() };
+    record = { id: 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), firstName, lastName, phone, email, originalName, notes, dates: availability, spouse: selSpouse, location: selLocation, sponsorship, timestamp: new Date().toISOString(), updatedAt: new Date().toISOString() };
     registrations.push(record);
     localStorage.setItem('reunion_my_id', record.id);
   }
