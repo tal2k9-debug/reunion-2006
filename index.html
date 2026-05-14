@@ -1067,8 +1067,13 @@ function closeEditModal() { document.getElementById('editModal').classList.remov
 
 function normalizePhone(p) {
   let s = String(p || '').replace(/\D/g, '');
-  if (s.startsWith('972')) s = '0' + s.slice(3);
-  if (s.length === 9) s = '0' + s; // 525144401 → 0525144401 (Google Sheets removes leading zero)
+  // Remove leading international codes
+  if (s.startsWith('00972')) s = s.slice(5);
+  else if (s.startsWith('972')) s = s.slice(3);
+  // Remove any leading zeros that resulted from international stripping
+  while (s.length > 9 && s.startsWith('0')) s = s.slice(1);
+  // Add leading 0 if the number is 9 digits (Google Sheets strips leading zero)
+  if (s.length === 9 && !s.startsWith('0')) s = '0' + s;
   return s;
 }
 
