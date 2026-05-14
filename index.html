@@ -418,11 +418,6 @@
     <span class="stat-num" id="totalVisits">···</span>
     <span>כניסות</span>
   </div>
-  <div class="stat-pill online" title="פעילים בעמוד כעת">
-    <span class="pulse-dot"></span>
-    <span class="stat-num" id="onlineNow">···</span>
-    <span>פעילים כעת</span>
-  </div>
 </div>
 
 <div class="bg-blobs">
@@ -907,10 +902,8 @@ async function init() {
 async function trackVisitorStats() {
   const NAMESPACE = 'reunion2006tal';
   const visitsEl = document.getElementById('totalVisits');
-  const onlineEl = document.getElementById('onlineNow');
-  // Use abacus.jasoncameron.dev - free, no auth, reliable counter
   try {
-    // Total visits - increment once per session
+    // Total visits - increment once per session, otherwise just read
     if (!sessionStorage.getItem('reunion_visit_counted')) {
       const r = await fetch(`https://abacus.jasoncameron.dev/hit/${NAMESPACE}/visits`);
       const d = await r.json();
@@ -922,45 +915,6 @@ async function trackVisitorStats() {
       visitsEl.textContent = (d.value || 1).toLocaleString();
     }
   } catch (e) { visitsEl.textContent = '—'; }
-
-  // Online users - heartbeat approach
-  try {
-    // Increment online counter on entry
-    const r = await fetch(`https://abacus.jasoncameron.dev/hit/${NAMESPACE}/online`);
-    const d = await r.json();
-    onlineEl.textContent = Math.max(1, d.value % 100); // mod to keep reasonable
-
-    // Decrement on unload
-    const decrementOnExit = () => {
-      try {
-        const url = `https://abacus.jasoncameron.dev/hit/${NAMESPACE}/online_left`;
-        if (navigator.sendBeacon) navigator.sendBeacon(url);
-        else fetch(url, { keepalive: true });
-      } catch(_) {}
-    };
-    window.addEventListener('beforeunload', decrementOnExit);
-    window.addEventListener('pagehide', decrementOnExit);
-
-    // Estimate active users: visits in last 5 min minus exits in last 5 min, with minimum 1
-    setInterval(async () => {
-      try {
-        const [h, l] = await Promise.all([
-          fetch(`https://abacus.jasoncameron.dev/get/${NAMESPACE}/online`).then(r => r.json()),
-          fetch(`https://abacus.jasoncameron.dev/get/${NAMESPACE}/online_left`).then(r => r.json())
-        ]);
-        const active = Math.max(1, (h.value || 0) - (l.value || 0));
-        onlineEl.textContent = active.toLocaleString();
-      } catch(_) {}
-    }, 15000);
-
-    // Initial active estimate
-    try {
-      const lr = await fetch(`https://abacus.jasoncameron.dev/get/${NAMESPACE}/online_left`);
-      const ld = await lr.json();
-      const active = Math.max(1, (d.value || 0) - (ld.value || 0));
-      onlineEl.textContent = active.toLocaleString();
-    } catch(_) {}
-  } catch (e) { onlineEl.textContent = '—'; }
 }
 
 function checkRegisteredUser() {
