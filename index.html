@@ -37,6 +37,8 @@
   .stat-pill:hover { transform: scale(1.05); border-color: var(--primary); }
   .stat-pill .stat-num { font-weight: 800; color: var(--primary); font-size: 14px; }
   .stat-pill.online .stat-num { color: var(--success); }
+  .stat-pill.registered .stat-num { color: var(--accent); }
+  .stat-pill.registered { border-color: rgba(245, 158, 11, 0.3); }
   .stat-pill .pulse-dot {
     width: 8px; height: 8px; border-radius: 50%; background: var(--success);
     animation: pulse-stat 2s infinite;
@@ -417,6 +419,11 @@
     <span>👁️</span>
     <span class="stat-num" id="totalVisits">···</span>
     <span>כניסות</span>
+  </div>
+  <div class="stat-pill registered" title="מספר הנרשמים לפגישה">
+    <span>🎓</span>
+    <span class="stat-num" id="registeredCount">0</span>
+    <span>נרשמו</span>
   </div>
 </div>
 
@@ -1321,6 +1328,9 @@ function updateLiveResults() {
   document.getElementById('totalRegistered').textContent = registrations.length;
   const flexibleCount = registrations.filter(r => r.dates?.flexible).length;
   document.getElementById('totalFlexible').textContent = flexibleCount;
+  // Update the small registered counter in the top corner widget
+  const regCounter = document.getElementById('registeredCount');
+  if (regCounter) regCounter.textContent = registrations.length.toLocaleString();
 
   document.getElementById('liveCount').textContent = `${registrations.length} משתתפים ענו`;
 
