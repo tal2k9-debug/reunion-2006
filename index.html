@@ -195,6 +195,8 @@
 
   /* Date list (specific + blackout) */
   .date-input-row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+  .date-range-row { flex-wrap: wrap; }
+  @media (max-width: 500px) { .date-range-row { gap: 6px; } .date-range-row span { width: 100%; } }
   .date-input-row input[type="date"] {
     flex: 1; background: var(--bg); border: 1px solid var(--border);
     border-radius: 10px; padding: 10px 14px; color: var(--text); font-family: inherit;
@@ -594,6 +596,20 @@
           <div class="added-dates" id="specificDatesList"></div>
         </div>
 
+        <!-- Q5b: Date ranges -->
+        <div class="survey-step">
+          <h3>🗓️ טווח תאריכים שאני זמין/ה (אופציונלי)</h3>
+          <div class="hint">למשל: זמין מ-10/10 עד 20/10 (חופשה, סופ"ש מורחב וכו')</div>
+          <div class="date-input-row date-range-row">
+            <span style="color: var(--text-muted); font-size: 13px;">מתאריך</span>
+            <input type="date" id="rangeFromInput" min="2026-07-01" max="2026-12-31">
+            <span style="color: var(--text-muted); font-size: 13px;">עד תאריך</span>
+            <input type="date" id="rangeToInput" min="2026-07-01" max="2026-12-31">
+            <button class="btn-add-date" onclick="addDateRange()">+ הוסף</button>
+          </div>
+          <div class="added-dates" id="dateRangesList"></div>
+        </div>
+
         <!-- Q6: Blackout dates -->
         <div class="survey-step">
           <h3>❌ תאריכים שאני בטוח לא זמין (אופציונלי)</h3>
@@ -880,6 +896,7 @@ let selDays = new Set();
 let selTimes = new Set();
 let specificDates = [];
 let blackoutDates = [];
+let dateRanges = [];
 let selSpouse = null;
 let selLocation = null;
 let selSponsor = null;
@@ -1161,6 +1178,26 @@ function addBlackoutDate() {
 }
 function removeBlackoutDate(idx) { blackoutDates.splice(idx, 1); renderDateList('blackoutDatesList', blackoutDates, 'removeBlackoutDate', true); }
 
+function addDateRange() {
+  const from = document.getElementById('rangeFromInput').value;
+  const to = document.getElementById('rangeToInput').value;
+  if (!from || !to) { alert('יש לבחור גם תאריך התחלה וגם תאריך סיום'); return; }
+  if (from > to) { alert('תאריך הסיום חייב להיות אחרי תאריך ההתחלה'); return; }
+  if (dateRanges.some(r => r.from === from && r.to === to)) { alert('כבר הוספת את הטווח הזה'); return; }
+  dateRanges.push({ from, to });
+  document.getElementById('rangeFromInput').value = '';
+  document.getElementById('rangeToInput').value = '';
+  renderDateRanges();
+}
+function removeDateRange(idx) { dateRanges.splice(idx, 1); renderDateRanges(); }
+function renderDateRanges() {
+  document.getElementById('dateRangesList').innerHTML = dateRanges.map((r, i) =>
+    `<div class="added-date-row">
+      <span>${formatNiceDate(r.from)} ← ${formatNiceDate(r.to)}</span>
+      <button class="added-date-remove" onclick="removeDateRange(${i})">×</button>
+    </div>`).join('');
+}
+
 function renderDateList(elId, list, removeFn, blackout) {
   document.getElementById(elId).innerHTML = list.map((d, i) =>
     `<div class="added-date-row ${blackout ? 'blackout' : ''}">
@@ -1184,6 +1221,7 @@ function showRegisteredView(reg) {
     if (av.days?.length) parts.push('📆 ' + av.days.map(d => DAY_NAMES[parseInt(d)]).join(', '));
     if (av.times?.length) parts.push('⏰ ' + av.times.map(t => TIME_LABELS[t]).join(', '));
     if (av.specificDates?.length) parts.push('✅ ' + av.specificDates.length + ' תאריכים ספציפיים');
+    if (av.dateRanges?.length) parts.push('🗓️ ' + av.dateRanges.length + ' טווח' + (av.dateRanges.length > 1 ? 'י' : '') + ' תאריכים');
     if (av.blackoutDates?.length) parts.push('❌ ' + av.blackoutDates.length + ' תאריכים חסומים');
   }
   const loc = LOCATION_LABELS[reg.location || av.location];
@@ -1234,6 +1272,7 @@ function loadIntoForm(reg, isViaSearch) {
   selTimes = new Set(av.times || []);
   specificDates = [...(av.specificDates || [])];
   blackoutDates = [...(av.blackoutDates || [])];
+  dateRanges = [...(av.dateRanges || [])];
   selSpouse = reg.spouse;
   selLocation = reg.location || null;
   selSponsor = reg.sponsorship?.interested || null;
@@ -1256,6 +1295,7 @@ function loadIntoForm(reg, isViaSearch) {
   document.querySelectorAll('[data-time]').forEach(el => el.classList.toggle('selected', selTimes.has(el.dataset.time)));
   renderDateList('specificDatesList', specificDates, 'removeSpecificDate', false);
   renderDateList('blackoutDatesList', blackoutDates, 'removeBlackoutDate', true);
+  renderDateRanges();
 
   document.querySelectorAll('#spouseToggle .toggle-option').forEach(e => e.classList.toggle('selected', e.dataset.value === selSpouse));
   document.querySelectorAll('[data-location]').forEach(e => e.classList.toggle('selected', e.dataset.location === selLocation));
@@ -1280,7 +1320,7 @@ function loadIntoForm(reg, isViaSearch) {
 function cancelEdit() {
   editingId = null; isFlexible = false;
   selMonths.clear(); selWeeks.clear(); selDays.clear(); selTimes.clear();
-  specificDates = []; blackoutDates = [];
+  specificDates = []; blackoutDates = []; dateRanges = [];
   selSpouse = null; selLocation = null; selSponsor = null; selSponsorTypes.clear();
 
   ['firstName','lastName','phone','email','originalName','notes','sponsorDetailsText'].forEach(id => document.getElementById(id).value = '');
@@ -1291,6 +1331,7 @@ function cancelEdit() {
   document.getElementById('welcomeBack').classList.remove('show');
   document.getElementById('submitBtnText').textContent = 'שלחו את התשובות ✨';
   document.getElementById('specificDatesList').innerHTML = '';
+  document.getElementById('dateRangesList').innerHTML = '';
   document.getElementById('blackoutDatesList').innerHTML = '';
   // Restore the edit link visibility for the form view
   const eLink = document.getElementById('editExistingLink');
@@ -1352,6 +1393,7 @@ async function submitForm() {
     times: Array.from(selTimes),
     specificDates: [...specificDates],
     blackoutDates: [...blackoutDates],
+    dateRanges: [...dateRanges],
     location: selLocation,  // packed into availability so it saves to sheet
     email: email             // also packed (no separate column needed)
   };
