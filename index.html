@@ -45,9 +45,9 @@
 
   header { text-align: center; padding: 60px 0 20px; }
   .badge {
-    display: inline-block; padding: 6px 16px;
+    display: inline-block; padding: 12px 28px;
     background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.4);
-    border-radius: 100px; font-size: 13px; font-weight: 500; margin-bottom: 20px; color: #c7d2fe;
+    border-radius: 100px; font-size: 22px; font-weight: 700; margin-bottom: 24px; color: #c7d2fe;
   }
   h1 {
     font-size: clamp(40px, 8vw, 64px); font-weight: 900; line-height: 1.1; margin-bottom: 16px;
@@ -390,8 +390,8 @@
 
   <header>
     <div class="badge">🎓 פגישת מחזור • 20 שנה</div>
-    <h1>נפגשים שוב.<br>בוא נמצא את התאריך הטוב ביותר.</h1>
-    <p class="subtitle">ענה איך שנוח לך - חודש, שבוע, יום או תאריך ספציפי. המערכת תחשב את התאריך שמתאים לרוב</p>
+    <h1>נפגשים שוב.<br>בואו נמצא את התאריך הטוב ביותר.</h1>
+    <p class="subtitle">ענו איך שנוח לכם - חודש, שבוע, יום או תאריך ספציפי. המערכת תחשב את התאריך שמתאים לרוב</p>
     <div class="edit-existing-link" id="editExistingLink">
       <a onclick="openEditExisting()">כבר נרשמתי - אני רוצה לעדכן את התשובות ↻</a>
     </div>
@@ -400,8 +400,8 @@
   <div class="welcome-back" id="welcomeBack">
     <div style="font-size: 36px;">👋</div>
     <div class="welcome-back-text">
-      <div class="welcome-back-title" id="welcomeBackName">ברוך השב!</div>
-      <div class="welcome-back-sub">התשובות הקודמות שלך נטענו. שנה מה שתרצה ולחץ שמור.</div>
+      <div class="welcome-back-title" id="welcomeBackName">ברוך/ה השב/ה!</div>
+      <div class="welcome-back-sub">התשובות הקודמות שלך נטענו. שנה/י מה שתרצה/י ולחץ/י שמור.</div>
     </div>
     <button class="btn" onclick="cancelEdit()">בטל עריכה</button>
   </div>
@@ -412,7 +412,7 @@
       <div class="registered-emoji">✅</div>
       <div class="registered-text">
         <div class="registered-title" id="registeredTitle">היי! הצבעתך נקלטה ✨</div>
-        <div class="registered-sub">תוכל לחזור ולערוך את התשובות שלך בכל זמן</div>
+        <div class="registered-sub">תוכל/י לחזור ולערוך את התשובות שלך בכל זמן</div>
       </div>
       <button class="btn-edit-answers" onclick="startEdit()">
         <span style="font-size: 20px;">✏️</span>
@@ -443,15 +443,15 @@
 
     <!-- Flexible card -->
     <section>
-      <h2>1. מתי אתה זמין? 🗓️</h2>
+      <h2>1. מתי את/ה זמין/ה? 🗓️</h2>
       <p class="section-subtitle">ענה לפי איך שנוח לך - אפשר לדלג על שאלות. כל תשובה עוזרת.</p>
 
       <div class="flexible-card" id="flexibleCard" onclick="toggleFlexible()">
         <div class="flexible-row">
           <div class="flexible-emoji">🎲</div>
           <div class="flexible-text">
-            <div class="flexible-title">אני זמין בכל תאריך - תקבעו אתם!</div>
-            <div class="flexible-sub">אם תסמן, נצרף אותך למגיעים בתאריך הסופי שייבחר</div>
+            <div class="flexible-title">אני זמין/ה בכל תאריך - תקבעו אתם!</div>
+            <div class="flexible-sub">אם תסמנו, נצרף אתכם למגיעים בתאריך הסופי שייבחר</div>
           </div>
           <div class="flexible-check">✓</div>
         </div>
@@ -480,7 +480,7 @@
 
         <!-- Q3: Days of week -->
         <div class="survey-step">
-          <h3>📆 אילו ימים בשבוע אתה זמין?</h3>
+          <h3>📆 אילו ימים בשבוע את/ה זמין/ה?</h3>
           <div class="hint">חמישי ושישי הם הימים המסורתיים למפגשי מחזור</div>
           <div class="days-grid">
             <div class="day-pill" data-day="0" onclick="toggleDay(this)">ראשון</div>
@@ -505,7 +505,7 @@
 
         <!-- Q5: Specific dates -->
         <div class="survey-step">
-          <h3>✅ תאריכים ספציפיים שאני יודע שאני זמין (אופציונלי)</h3>
+          <h3>✅ תאריכים ספציפיים שאני זמין/ה (אופציונלי)</h3>
           <div class="hint">למשל: יש לי חופש ב-15/10</div>
           <div class="date-input-row">
             <input type="date" id="specificDateInput" min="2026-07-01" max="2026-12-31">
@@ -543,7 +543,7 @@
         </div>
 
         <div class="form-group">
-          <label>📍 מאיפה אתה מגיע? (יעזור לתכנון מיקום המפגש)</label>
+          <label>📍 מאיפה את/ה מגיע/ה? (יעזור לתכנון מיקום המפגש)</label>
           <div class="pill-grid" style="margin-top: 8px;">
             <div class="pill" data-location="north" onclick="selectLocation(this)"><div class="pill-emoji">🏔️</div><div>צפון</div></div>
             <div class="pill" data-location="haifa" onclick="selectLocation(this)"><div class="pill-emoji">⛵</div><div>חיפה והקריות</div></div>
@@ -561,12 +561,12 @@
           <div class="toggle-group" id="spouseToggle">
             <div class="toggle-option" data-value="yes">כן</div>
             <div class="toggle-option" data-value="no">לא</div>
-            <div class="toggle-option" data-value="maybe">עוד לא יודע</div>
+            <div class="toggle-option" data-value="maybe">עוד לא יודע/ת</div>
           </div>
         </div>
         <div class="form-group">
           <label for="notes">הערות (אופציונלי)</label>
-          <textarea id="notes" rows="3" placeholder="כל מה שתרצה להוסיף..."></textarea>
+          <textarea id="notes" rows="3" placeholder="כל מה שתרצה/י להוסיף..."></textarea>
         </div>
       </div>
     </section>
@@ -582,7 +582,7 @@
         </div>
         <div class="sponsor-desc">בלי תקציב גדול אי אפשר להפיק אירוע מיוחד. כל תרומה, גדולה או קטנה, נחשבת.</div>
         <div class="form-group" style="margin-bottom: 0;">
-          <label>האם תרצה לתת חסות / להיות שותף בהפקה?</label>
+          <label>האם תרצה/י לתת חסות / להיות שותף/ה בהפקה?</label>
           <div class="toggle-group" id="sponsorToggle">
             <div class="toggle-option" data-value="yes">כן, אשמח להתרום</div>
             <div class="toggle-option" data-value="maybe">אולי, ספרו לי עוד</div>
@@ -607,8 +607,8 @@
             <textarea id="sponsorDetailsText" rows="3" placeholder="לדוגמה: אני בעל מסעדה ואוכל לתרום אוכל ל-50 איש..."></textarea>
           </div>
           <div class="contact-info-box">
-            💬 לאחר שתשלח את הטופס, נחזור אליך בהקדם.<br>
-            רוצה לדבר עכשיו? צור קשר עם <strong>ניל - מנהל האירוע</strong>:<br>
+            💬 לאחר שתשלח/י את הטופס, נחזור אליך בהקדם.<br>
+            רוצה/ה לדבר עכשיו? צרו קשר עם <strong>ניל - מנהל האירוע</strong>:<br>
             <a href="https://wa.me/972544897224" target="_blank">📱 וואטסאפ</a>
             &nbsp;•&nbsp;
             <a href="tel:054-489-7224">📞 טלפון: 054-489-7224</a>
@@ -629,7 +629,7 @@
     <div id="sponsorFollowup" style="display:none; margin-top: 20px; padding: 20px; background: rgba(245, 158, 11, 0.1); border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.3);">
       <strong>💎 תודה על הנכונות לתת חסות!</strong><br>
       ניל יחזור אליך תוך 24-48 שעות לסגירת הפרטים.<br>
-      <a href="https://wa.me/972544897224" target="_blank" style="display:inline-block; margin-top:12px; color: var(--primary); font-weight: 600;">לחץ כאן לפנייה ישירה לניל בוואטסאפ ←</a>
+      <a href="https://wa.me/972544897224" target="_blank" style="display:inline-block; margin-top:12px; color: var(--primary); font-weight: 600;">לחצו כאן לפנייה ישירה לניל בוואטסאפ ←</a>
     </div>
     <br>
     <a href="https://chat.whatsapp.com/FEDcxrWADE4DKoGXow7PdI" target="_blank" rel="noopener" style="display:inline-block; margin-top:20px; background:#25D366; color:white; padding:14px 24px; border-radius:12px; text-decoration:none; font-weight:700;">💬 הצטרפו לקבוצת הוואטסאפ של המחזור</a>
@@ -649,7 +649,7 @@
     <div class="gallery-actions">
       <button class="btn btn-upload" onclick="openDriveUpload()">
         <span style="font-size: 22px;">📤</span>
-        <span>העלה תמונות שלך</span>
+        <span>העלו תמונות שלכם</span>
       </button>
       <button class="btn btn-refresh-gallery" onclick="refreshGallery()" title="רענן">
         <span style="font-size: 18px;">🔄</span>
@@ -658,7 +658,7 @@
 
     <div class="gallery-info">
       💡 <strong>איך זה עובד:</strong> לחיצה על "העלה תמונות" תפתח את התיקייה ב-Drive.
-      להורדת תמונה ספציפית - לחץ עליה כדי לפתוח אותה ב-Drive ושם תוכל להוריד.
+      להורדת תמונה ספציפית - לחצו עליה כדי לפתוח אותה ב-Drive ושם תוכלו להוריד.
     </div>
 
     <div class="gallery-wrapper">
@@ -680,7 +680,7 @@
   <div class="modal">
     <button class="modal-close" onclick="closeEditModal()">×</button>
     <h3>🔍 מציאת תשובה קיימת</h3>
-    <p>הקלד את מספר הטלפון שאיתו ענית קודם, ונטען את התשובות שלך.</p>
+    <p>הקלד/י את מספר הטלפון שאיתו ענית/ה קודם, ונטען את התשובות שלך.</p>
     <div class="form-group"><label for="lookupPhone">מספר טלפון</label><input type="tel" id="lookupPhone" placeholder="050-1234567"></div>
     <div class="modal-actions">
       <button class="btn btn-primary" onclick="findExisting()" style="flex: 1;">מצא תשובה</button>
@@ -962,9 +962,9 @@ function showRegisteredView(reg) {
   }
   const loc = LOCATION_LABELS[reg.location || av.location];
   if (loc) parts.push('📍 ' + loc);
-  const spouseTxt = { yes: 'מגיע עם בן/בת זוג', no: 'מגיע לבד', maybe: 'עדיין לא יודע אם עם בן/בת זוג' }[reg.spouse];
+  const spouseTxt = { yes: 'מגיע/ה עם בן/בת זוג', no: 'מגיע/ה לבד', maybe: 'עדיין לא יודע/ת אם עם בן/בת זוג' }[reg.spouse];
   if (spouseTxt) parts.push('👫 ' + spouseTxt);
-  if (reg.sponsorship?.interested === 'yes') parts.push('💎 מעוניין בחסות');
+  if (reg.sponsorship?.interested === 'yes') parts.push('💎 מעוניין/ת בחסות');
   else if (reg.sponsorship?.interested === 'maybe') parts.push('💎 אולי חסות');
 
   document.getElementById('registeredTitle').textContent = `היי ${reg.firstName}! הצבעתך נקלטה ✨`;
@@ -1034,7 +1034,7 @@ function loadIntoForm(reg, isViaSearch) {
   document.querySelectorAll('.sponsor-type').forEach(e => e.classList.toggle('selected', selSponsorTypes.has(e.dataset.value)));
   if (selSponsor === 'yes' || selSponsor === 'maybe') document.getElementById('sponsorDetails').classList.add('show');
 
-  document.getElementById('welcomeBackName').textContent = `ברוך השב, ${reg.firstName}! 👋`;
+  document.getElementById('welcomeBackName').textContent = `ברוך/ה השב/ה, ${reg.firstName}! 👋`;
   document.getElementById('welcomeBack').classList.add('show');
   document.getElementById('submitBtnText').textContent = 'עדכן את התשובות 💾';
 
@@ -1079,10 +1079,10 @@ function normalizePhone(p) {
 
 function findExisting() {
   const inputPhone = normalizePhone(document.getElementById('lookupPhone').value);
-  if (!inputPhone) { alert('הקלד מספר טלפון'); return; }
+  if (!inputPhone) { alert('הקלד/י מספר טלפון'); return; }
   const found = registrations.find(r => normalizePhone(r.phone) === inputPhone);
   if (!found) {
-    alert('לא נמצאה תשובה עם המספר הזה. ודא שאתה מקליד את אותו מספר שאיתו נרשמת.');
+    alert('לא נמצאה תשובה עם המספר הזה. ודא/י שאת/ה מקליד/ה את אותו מספר שאיתו נרשמת.');
     return;
   }
   localStorage.setItem('reunion_my_id', found.id);
@@ -1103,7 +1103,7 @@ async function submitForm() {
 
   // If not flexible, require at least one answer
   if (!isFlexible && selMonths.size === 0 && selWeeks.size === 0 && selDays.size === 0 && selTimes.size === 0 && specificDates.length === 0) {
-    if (!confirm('לא ענית על אף שאלה לגבי זמינות. האם להמשיך ולסמן אותך כגמיש (זמין לכל תאריך)?')) return;
+    if (!confirm('לא ענית על אף שאלה לגבי זמינות. האם להמשיך ולסמן אותך כגמיש/ה (זמין/ה לכל תאריך)?')) return;
     isFlexible = true;
   }
 
@@ -1152,7 +1152,7 @@ async function submitForm() {
   document.getElementById('formContainer').style.display = 'none';
   document.getElementById('welcomeBack').classList.remove('show');
   document.getElementById('successTitle').textContent = isUpdate ? '✅ עודכן בהצלחה!' : '🎉 תודה רבה!';
-  document.getElementById('successText').textContent = isUpdate ? 'התשובות שלך עודכנו במערכת.' : 'התשובות שלך נשמרו. רענן את העמוד כדי לראות את התוצאות העדכניות.';
+  document.getElementById('successText').textContent = isUpdate ? 'התשובות שלך עודכנו במערכת.' : 'התשובות שלך נשמרו. רענן/י את העמוד כדי לראות את התוצאות העדכניות.';
   document.getElementById('sponsorFollowup').style.display = (sponsorship && (sponsorship.interested === 'yes' || sponsorship.interested === 'maybe')) ? 'block' : 'none';
 
   submitBtn.disabled = false; btnText.textContent = originalText;
