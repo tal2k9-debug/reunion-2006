@@ -437,7 +437,7 @@
     <h1>נפגשים שוב.<br>בואו נמצא את התאריך הטוב ביותר.</h1>
     <p class="subtitle">ענו איך שנוח לכם - חודש, שבוע, יום או תאריך ספציפי. המערכת תחשב את התאריך שמתאים לרוב</p>
     <div class="edit-existing-link" id="editExistingLink">
-      <a onclick="openEditExisting()">כבר נרשמתי - אני רוצה לעדכן את התשובות ↻</a>
+      <a onclick="openEditExisting()">✏️ ערוך את התשובות שלי</a>
     </div>
   </header>
 
@@ -1157,6 +1157,9 @@ function loadIntoForm(reg, isViaSearch) {
   document.getElementById('welcomeBackName').textContent = `ברוך/ה השב/ה, ${reg.firstName}! 👋`;
   document.getElementById('welcomeBack').classList.add('show');
   document.getElementById('submitBtnText').textContent = 'עדכן את התשובות 💾';
+  // Hide the duplicate "edit" link while in edit mode
+  const eLink = document.getElementById('editExistingLink');
+  if (eLink) eLink.style.display = 'none';
 
   if (isViaSearch) {
     closeEditModal();
@@ -1180,6 +1183,9 @@ function cancelEdit() {
   document.getElementById('submitBtnText').textContent = 'שלחו את התשובות ✨';
   document.getElementById('specificDatesList').innerHTML = '';
   document.getElementById('blackoutDatesList').innerHTML = '';
+  // Restore the edit link visibility for the form view
+  const eLink = document.getElementById('editExistingLink');
+  if (eLink) eLink.style.display = '';
 }
 
 function openEditExisting() { document.getElementById('editModal').classList.add('show'); document.getElementById('lookupPhone').focus(); }
