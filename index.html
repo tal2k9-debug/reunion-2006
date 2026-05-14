@@ -3,40 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>מפגש מחזור - 20 שנה 🎓</title>
+<title>פגישת מחזור - 20 שנה 🎓</title>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --primary: #6366f1;
-    --primary-dark: #4f46e5;
-    --secondary: #ec4899;
-    --accent: #f59e0b;
-    --success: #10b981;
-    --warning: #f59e0b;
-    --bg: #0f172a;
-    --bg-card: #1e293b;
-    --text: #f1f5f9;
-    --text-muted: #94a3b8;
-    --border: #334155;
+    --primary: #6366f1; --primary-dark: #4f46e5; --secondary: #ec4899;
+    --accent: #f59e0b; --success: #10b981; --warning: #f59e0b;
+    --bg: #0f172a; --bg-card: #1e293b;
+    --text: #f1f5f9; --text-muted: #94a3b8; --border: #334155;
   }
   body {
     font-family: 'Heebo', sans-serif;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #312e81 100%);
-    min-height: 100vh;
-    color: var(--text);
-    overflow-x: hidden;
+    min-height: 100vh; color: var(--text); overflow-x: hidden;
   }
-  /* Animated background */
-  .bg-blobs { position: fixed; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; z-index: 0; pointer-events: none; }
-  .blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.4;
-    animation: float 20s ease-in-out infinite;
-  }
+  .bg-blobs { position: fixed; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; animation: float 20s ease-in-out infinite; }
   .blob1 { width: 400px; height: 400px; background: var(--primary); top: -100px; right: -100px; }
   .blob2 { width: 350px; height: 350px; background: var(--secondary); bottom: -80px; left: -80px; animation-delay: -7s; }
   .blob3 { width: 300px; height: 300px; background: var(--accent); top: 40%; left: 30%; animation-delay: -14s; opacity: 0.2;}
@@ -45,398 +29,272 @@
     33% { transform: translate(30px, -50px) scale(1.1); }
     66% { transform: translate(-20px, 30px) scale(0.95); }
   }
-
   .container { max-width: 900px; margin: 0 auto; padding: 24px; position: relative; z-index: 1; }
 
   /* Welcome back banner */
   .welcome-back {
     background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%);
     border: 1px solid rgba(245, 158, 11, 0.4);
-    border-radius: 16px;
-    padding: 20px 24px;
-    margin-top: 20px;
-    display: none;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
+    border-radius: 16px; padding: 20px 24px; margin-top: 20px;
+    display: none; align-items: center; gap: 16px; flex-wrap: wrap;
   }
   .welcome-back.show { display: flex; }
   .welcome-back-text { flex: 1; min-width: 200px; }
   .welcome-back-title { font-weight: 700; font-size: 16px; }
   .welcome-back-sub { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
-  /* Header */
   header { text-align: center; padding: 60px 0 20px; }
   .badge {
-    display: inline-block;
-    padding: 6px 16px;
-    background: rgba(99, 102, 241, 0.2);
-    border: 1px solid rgba(99, 102, 241, 0.4);
-    border-radius: 100px;
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 20px;
-    color: #c7d2fe;
+    display: inline-block; padding: 6px 16px;
+    background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.4);
+    border-radius: 100px; font-size: 13px; font-weight: 500; margin-bottom: 20px; color: #c7d2fe;
   }
   h1 {
-    font-size: clamp(40px, 8vw, 64px);
-    font-weight: 900;
-    line-height: 1.1;
-    margin-bottom: 16px;
+    font-size: clamp(40px, 8vw, 64px); font-weight: 900; line-height: 1.1; margin-bottom: 16px;
     background: linear-gradient(135deg, #fff 0%, #c7d2fe 50%, #f9a8d4 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   }
   .subtitle { font-size: 18px; color: var(--text-muted); max-width: 600px; margin: 0 auto; }
-
-  /* Edit existing link */
-  .edit-existing-link {
-    text-align: center;
-    margin-top: 16px;
-    font-size: 14px;
-  }
-  .edit-existing-link a {
-    color: var(--text-muted);
-    text-decoration: underline;
-    cursor: pointer;
-  }
+  .edit-existing-link { text-align: center; margin-top: 16px; font-size: 14px; }
+  .edit-existing-link a { color: var(--text-muted); text-decoration: underline; cursor: pointer; }
   .edit-existing-link a:hover { color: var(--primary); }
 
-  /* Leading date card */
-  .leading-card {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%);
+  /* Live results section */
+  .live-results {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);
     border: 1px solid rgba(99, 102, 241, 0.4);
-    border-radius: 24px;
-    padding: 32px;
-    margin: 40px 0;
-    text-align: center;
-    backdrop-filter: blur(20px);
-    position: relative;
-    overflow: hidden;
+    border-radius: 24px; padding: 28px; margin: 40px 0; backdrop-filter: blur(20px);
   }
-  .leading-card::before {
-    content: "🏆";
-    position: absolute;
-    font-size: 200px;
-    opacity: 0.05;
-    top: -30px;
-    left: -30px;
+  .live-results-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  .live-pulse {
+    width: 10px; height: 10px; background: var(--success); border-radius: 50%;
+    animation: pulse-dot 2s infinite;
   }
-  .leading-label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
-  .leading-date { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
-  .leading-count { font-size: 16px; color: var(--success); font-weight: 500;}
+  @keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    50% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+  }
+  .live-title { font-size: 18px; font-weight: 700; flex: 1; }
+  .live-count { font-size: 13px; color: var(--text-muted); }
+  .top-dates-list { display: grid; gap: 10px; }
+  .top-date-row {
+    background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 18px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .top-date-row.first { border-color: var(--accent); background: linear-gradient(90deg, rgba(245, 158, 11, 0.15), rgba(15, 23, 42, 0.5)); }
+  .rank-badge {
+    background: var(--bg-card); width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px; flex-shrink: 0;
+  }
+  .rank-badge.gold { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1e293b; }
+  .rank-badge.silver { background: linear-gradient(135deg, #cbd5e1, #94a3b8); color: #1e293b; }
+  .rank-badge.bronze { background: linear-gradient(135deg, #d97706, #b45309); color: white; }
+  .top-date-info { flex: 1; min-width: 0; }
+  .top-date-name { font-weight: 600; font-size: 15px; }
+  .top-date-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .top-date-score { text-align: left; }
+  .top-date-percent { font-weight: 700; color: var(--success); font-size: 18px; }
+  .top-date-count { font-size: 12px; color: var(--text-muted); }
+  .empty-results { text-align: center; padding: 30px; color: var(--text-muted); }
 
-  /* Section */
   section { margin: 48px 0; }
-  h2 { font-size: 24px; margin-bottom: 20px; font-weight: 700;}
+  h2 { font-size: 24px; margin-bottom: 12px; font-weight: 700;}
   .section-subtitle { color: var(--text-muted); margin-bottom: 24px; font-size: 15px;}
 
-  /* Date cards */
-  .dates-grid { display: grid; gap: 12px; }
-  .date-card {
-    background: var(--bg-card);
-    border: 2px solid var(--border);
-    border-radius: 16px;
-    padding: 20px 24px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    position: relative;
-    overflow: hidden;
+  /* Flexible toggle */
+  .flexible-card {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(99, 102, 241, 0.1));
+    border: 2px solid rgba(16, 185, 129, 0.3);
+    border-radius: 16px; padding: 20px;
+    margin-bottom: 24px; cursor: pointer; transition: all 0.2s;
   }
-  .date-card:hover {
+  .flexible-card:hover { border-color: rgba(16, 185, 129, 0.5); }
+  .flexible-card.active { background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(99, 102, 241, 0.25)); border-color: var(--success); }
+  .flexible-row { display: flex; align-items: center; gap: 14px; }
+  .flexible-emoji { font-size: 36px; }
+  .flexible-text { flex: 1; }
+  .flexible-title { font-weight: 700; font-size: 17px; margin-bottom: 4px; }
+  .flexible-sub { font-size: 13px; color: var(--text-muted); }
+  .flexible-check {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 2px solid var(--border); display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: transparent; transition: all 0.2s;
+  }
+  .flexible-card.active .flexible-check { background: var(--success); border-color: var(--success); color: white; }
+
+  /* Survey steps */
+  .survey-step {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 24px; margin-bottom: 16px;
+  }
+  .survey-step h3 { font-size: 17px; margin-bottom: 14px; font-weight: 700; }
+  .survey-step .hint { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
+
+  /* Pill buttons grid */
+  .pill-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+  .pill {
+    background: var(--bg); border: 2px solid var(--border); border-radius: 12px;
+    padding: 12px; text-align: center; cursor: pointer; font-family: inherit;
+    color: var(--text); font-size: 14px; transition: all 0.2s;
+  }
+  .pill:hover { border-color: var(--primary); }
+  .pill.selected {
     border-color: var(--primary);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.15));
   }
-  .date-card.selected {
+  .pill-emoji { font-size: 22px; margin-bottom: 4px; }
+
+  /* Days grid */
+  .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  @media (max-width: 600px) { .days-grid { grid-template-columns: repeat(4, 1fr); } }
+  .day-pill {
+    background: var(--bg); border: 2px solid var(--border); border-radius: 10px;
+    padding: 14px 6px; text-align: center; cursor: pointer;
+    font-size: 14px; font-weight: 600; transition: all 0.2s;
+  }
+  .day-pill.weekend { background: rgba(99, 102, 241, 0.05); }
+  .day-pill:hover { border-color: var(--primary); }
+  .day-pill.selected {
     border-color: var(--primary);
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(236, 72, 153, 0.2));
   }
-  .date-card.selected::after {
-    content: "✓";
-    position: absolute;
-    top: 12px;
-    left: 16px;
-    background: var(--primary);
-    color: white;
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: bold;
+
+  /* Date list (specific + blackout) */
+  .date-input-row { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+  .date-input-row input[type="date"] {
+    flex: 1; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 14px; color: var(--text); font-family: inherit;
   }
-  .date-day {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-    color: white;
-    width: 56px;
-    height: 56px;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    flex-shrink: 0;
+  .btn-add-date {
+    background: var(--primary); color: white; border: none;
+    padding: 10px 16px; border-radius: 10px; cursor: pointer; font-family: inherit; font-weight: 600;
   }
-  .date-day-num { font-size: 20px; line-height: 1; }
-  .date-day-month { font-size: 10px; opacity: 0.9; }
-  .date-info { flex: 1; }
-  .date-info-day { font-weight: 600; font-size: 16px; }
-  .date-info-full { color: var(--text-muted); font-size: 13px; }
-  .date-popularity {
-    background: rgba(16, 185, 129, 0.15);
-    color: var(--success);
-    padding: 4px 12px;
-    border-radius: 100px;
-    font-size: 13px;
-    font-weight: 500;
+  .added-dates { display: grid; gap: 6px; }
+  .added-date-row {
+    background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 10px; padding: 10px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 14px;
   }
+  .added-date-row.blackout { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); }
+  .added-date-remove { background: transparent; border: none; color: #ef4444; cursor: pointer; font-size: 18px; padding: 0 6px; }
+
+  /* Stats preview */
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; }
+  @media (max-width: 600px) { .stats-row { grid-template-columns: 1fr; } }
+  .stat-mini {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 18px; text-align: center;
+  }
+  .stat-mini-num {
+    font-size: 28px; font-weight: 900;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .stat-mini-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
 
   /* Form */
-  .form-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 32px;
-  }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .form-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 28px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
   @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
-  .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px;}
+  .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px;}
   .form-group label { font-size: 14px; color: var(--text-muted); font-weight: 500; }
   .form-group input, .form-group select, .form-group textarea {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px 16px;
-    color: var(--text);
-    font-size: 15px;
-    font-family: inherit;
-    transition: all 0.2s;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 14px; color: var(--text); font-size: 15px; font-family: inherit; transition: all 0.2s;
   }
   .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
   }
+  .toggle-group { display: flex; gap: 8px; }
+  .toggle-option {
+    flex: 1; padding: 12px; border: 2px solid var(--border); background: var(--bg);
+    border-radius: 10px; text-align: center; cursor: pointer; font-size: 14px; transition: all 0.2s;
+  }
+  .toggle-option.selected { border-color: var(--primary); background: rgba(99, 102, 241, 0.15); }
 
-  /* Submit button */
   .submit-btn {
     width: 100%;
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-    color: white;
-    border: none;
-    padding: 18px;
-    border-radius: 14px;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-    margin-top: 24px;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
+    color: white; border: none; padding: 18px;
+    border-radius: 14px; font-size: 18px; font-weight: 700; cursor: pointer;
+    font-family: inherit; margin-top: 24px; transition: all 0.3s;
   }
   .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4); }
-  .submit-btn:active { transform: translateY(0); }
   .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* Success message */
   .success-msg {
-    background: rgba(16, 185, 129, 0.15);
-    border: 1px solid rgba(16, 185, 129, 0.4);
-    border-radius: 16px;
-    padding: 32px;
-    text-align: center;
-    display: none;
+    background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: 16px; padding: 32px; text-align: center; display: none;
   }
   .success-msg.show { display: block; animation: fadeInUp 0.5s; }
   @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   .success-msg h3 { color: var(--success); font-size: 24px; margin-bottom: 8px; }
 
-  /* Stats preview */
-  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
-  @media (max-width: 600px) { .stats-row { grid-template-columns: 1fr; } }
-  .stat-mini {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    text-align: center;
-  }
-  .stat-mini-num {
-    font-size: 32px;
-    font-weight: 900;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .stat-mini-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
-
   /* Sponsorship */
   .sponsor-card {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(236, 72, 153, 0.1));
     border: 1px solid rgba(245, 158, 11, 0.3);
-    border-radius: 24px;
-    padding: 28px;
-    margin-top: 16px;
+    border-radius: 20px; padding: 24px; margin-top: 16px;
   }
   .sponsor-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
   .sponsor-icon { font-size: 32px; }
   .sponsor-title { font-size: 20px; font-weight: 700; }
   .sponsor-desc { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; }
-  .sponsor-details {
-    display: none;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(245, 158, 11, 0.2);
-  }
+  .sponsor-details { display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(245, 158, 11, 0.2); }
   .sponsor-details.show { display: block; animation: fadeInUp 0.4s; }
   .sponsor-types { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin-bottom: 16px; }
   .sponsor-type {
-    background: var(--bg);
-    border: 2px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-    font-size: 13px;
+    background: var(--bg); border: 2px solid var(--border); border-radius: 10px;
+    padding: 10px 12px; cursor: pointer; transition: all 0.2s; text-align: center; font-size: 13px;
   }
   .sponsor-type:hover { border-color: var(--warning); }
   .sponsor-type.selected { border-color: var(--warning); background: rgba(245, 158, 11, 0.15); }
-
   .contact-info-box {
-    background: rgba(99, 102, 241, 0.1);
-    border: 1px dashed rgba(99, 102, 241, 0.4);
-    border-radius: 12px;
-    padding: 16px;
-    margin-top: 16px;
-    font-size: 14px;
-    text-align: center;
+    background: rgba(99, 102, 241, 0.1); border: 1px dashed rgba(99, 102, 241, 0.4);
+    border-radius: 12px; padding: 16px; margin-top: 16px; font-size: 14px; text-align: center;
   }
-  .contact-info-box a {
-    color: var(--primary);
-    text-decoration: none;
-    font-weight: 600;
-  }
+  .contact-info-box a { color: var(--primary); text-decoration: none; font-weight: 600; }
   .contact-info-box a:hover { text-decoration: underline; }
 
-  /* Admin link */
-  .admin-link {
-    text-align: center;
-    margin-top: 60px;
-    padding-bottom: 40px;
-  }
+  /* Admin */
+  .admin-link { text-align: center; margin-top: 50px; padding-bottom: 40px; }
   .admin-link a {
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 13px;
-    border-bottom: 1px dashed var(--text-muted);
-    cursor: pointer;
+    color: var(--text-muted); text-decoration: none; font-size: 13px;
+    border-bottom: 1px dashed var(--text-muted); cursor: pointer;
   }
   .admin-link a:hover { color: var(--primary); border-color: var(--primary); }
-
-  /* Admin panel */
   .admin-panel { display: none; padding: 40px 0; }
   .admin-panel.show { display: block; }
   .admin-back {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: inherit;
-    margin-bottom: 24px;
+    background: transparent; border: 1px solid var(--border); color: var(--text);
+    padding: 8px 16px; border-radius: 8px; cursor: pointer; font-family: inherit; margin-bottom: 24px;
   }
-  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 24px 0; }
-  @media (max-width: 700px) { .charts-grid { grid-template-columns: 1fr; } }
-  .chart-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-  }
-  .chart-card h3 { font-size: 16px; margin-bottom: 16px; }
-  .registrations-table {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow-x: auto;
-    margin-top: 24px;
-  }
+  .registrations-table { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; overflow-x: auto; margin-top: 24px; }
   table { width: 100%; border-collapse: collapse; }
-  th, td { padding: 12px 16px; text-align: right; border-bottom: 1px solid var(--border); font-size: 14px; vertical-align: top; }
-  th { background: var(--bg); font-weight: 600; color: var(--text-muted); font-size: 13px; }
+  th, td { padding: 12px 14px; text-align: right; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: top; }
+  th { background: var(--bg); font-weight: 600; color: var(--text-muted); font-size: 12px; }
   tr:last-child td { border-bottom: none; }
-  .btn-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+  .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
   .btn {
-    padding: 10px 20px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--bg-card);
-    color: var(--text);
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 14px;
+    padding: 10px 18px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--bg-card); color: var(--text); cursor: pointer; font-family: inherit; font-size: 14px;
   }
   .btn:hover { background: var(--bg); }
   .btn-danger { color: #ef4444; border-color: rgba(239, 68, 68, 0.4); }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    border: none;
-    color: white;
-    font-weight: 600;
-  }
-
+  .btn-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; color: white; font-weight: 600; }
   .empty-state { text-align: center; padding: 40px; color: var(--text-muted); }
+  .sponsor-badge { display: inline-block; background: rgba(245, 158, 11, 0.2); color: var(--warning); padding: 2px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; }
 
-  /* Toggle group */
-  .toggle-group { display: flex; gap: 8px; }
-  .toggle-option {
-    flex: 1;
-    padding: 12px;
-    border: 2px solid var(--border);
-    background: var(--bg);
-    border-radius: 12px;
-    text-align: center;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s;
-  }
-  .toggle-option.selected { border-color: var(--primary); background: rgba(99, 102, 241, 0.15); }
-
-  /* Sponsor badge in table */
-  .sponsor-badge {
-    display: inline-block;
-    background: rgba(245, 158, 11, 0.2);
-    color: var(--warning);
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  /* WhatsApp floating button */
+  /* WhatsApp floating */
   .whatsapp-float {
-    position: fixed;
-    bottom: 24px;
-    left: 24px;
-    width: 60px;
-    height: 60px;
-    background: #25D366;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 30px rgba(37, 211, 102, 0.5);
-    z-index: 1000;
-    transition: transform 0.3s;
-    text-decoration: none;
-    animation: pulse 2s infinite;
+    position: fixed; bottom: 24px; left: 24px;
+    width: 60px; height: 60px; background: #25D366; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 30px rgba(37, 211, 102, 0.5); z-index: 1000;
+    transition: transform 0.3s; text-decoration: none; animation: pulse 2s infinite;
   }
   .whatsapp-float:hover { transform: scale(1.1); }
   @keyframes pulse {
@@ -444,128 +302,178 @@
     50% { box-shadow: 0 8px 30px rgba(37, 211, 102, 0.9), 0 0 0 10px rgba(37, 211, 102, 0.1); }
   }
 
-  /* Modal */
   .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(8px);
-    z-index: 2000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+    z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px;
   }
   .modal-overlay.show { display: flex; animation: fadeInUp 0.3s; }
   .modal {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 32px;
-    max-width: 480px;
-    width: 100%;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 24px;
+    padding: 32px; max-width: 480px; width: 100%; position: relative;
   }
   .modal h3 { font-size: 22px; margin-bottom: 8px; }
   .modal p { color: var(--text-muted); margin-bottom: 20px; }
   .modal-actions { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
-  .modal-close {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    font-size: 24px;
-    cursor: pointer;
+  .modal-close { position: absolute; top: 20px; left: 20px; background: transparent; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
+
+  .chart-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+  .chart-card h3 { font-size: 16px; margin-bottom: 16px; }
+  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 24px 0; }
+  @media (max-width: 700px) { .charts-grid { grid-template-columns: 1fr; } }
+
+  .info-banner {
+    background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 12px; padding: 12px 16px; font-size: 13px; color: var(--text-muted); margin-bottom: 16px;
   }
 </style>
 </head>
 <body>
 
 <div class="bg-blobs">
-  <div class="blob blob1"></div>
-  <div class="blob blob2"></div>
-  <div class="blob blob3"></div>
+  <div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div>
 </div>
 
 <!-- ====== MAIN PAGE ====== -->
 <div id="mainPage" class="container">
 
   <header>
-    <div class="badge">🎓 מפגש מחזור • 20 שנה</div>
-    <h1>נפגשים שוב.<br>הפעם נחליט יחד מתי.</h1>
-    <p class="subtitle">סמנו את התאריכים שמתאימים לכם, מלאו פרטים, ובואו נראה איזה תאריך זוכה</p>
+    <div class="badge">🎓 פגישת מחזור • 20 שנה</div>
+    <h1>נפגשים שוב.<br>בוא נמצא את התאריך הטוב ביותר.</h1>
+    <p class="subtitle">ענה איך שנוח לך - חודש, שבוע, יום או תאריך ספציפי. המערכת תחשב את התאריך שמתאים לרוב</p>
     <div class="edit-existing-link">
-      <a onclick="openEditExisting()">כבר נרשמתי - אני רוצה לעדכן את הבחירה ↻</a>
+      <a onclick="openEditExisting()">כבר נרשמתי - אני רוצה לעדכן את התשובות ↻</a>
     </div>
   </header>
 
-  <!-- Welcome back banner -->
   <div class="welcome-back" id="welcomeBack">
     <div style="font-size: 36px;">👋</div>
     <div class="welcome-back-text">
       <div class="welcome-back-title" id="welcomeBackName">ברוך השב!</div>
-      <div class="welcome-back-sub">ההרשמה הקודמת שלך נטענה. שנה מה שתרצה ולחץ שמור.</div>
+      <div class="welcome-back-sub">התשובות הקודמות שלך נטענו. שנה מה שתרצה ולחץ שמור.</div>
     </div>
     <button class="btn" onclick="cancelEdit()">בטל עריכה</button>
   </div>
 
-  <!-- Leading date display -->
-  <div class="leading-card" id="leadingCard">
-    <div class="leading-label">תאריך מוביל כרגע</div>
-    <div class="leading-date" id="leadingDate">עדיין אין נתונים</div>
-    <div class="leading-count" id="leadingCount">היו הראשונים לבחור!</div>
+  <!-- ===== Live Results ===== -->
+  <div class="live-results">
+    <div class="live-results-header">
+      <div class="live-pulse"></div>
+      <div class="live-title">📊 התוצאות העדכניות</div>
+      <div class="live-count" id="liveCount">טוען...</div>
+    </div>
+    <div class="info-banner" id="liveInfo">המערכת תציג כאן את התאריכים שהכי הרבה אנשים זמינים בהם, אחרי שמספיק אנשים ישיבו</div>
+    <div class="top-dates-list" id="topDatesList"></div>
   </div>
 
-  <!-- Quick stats -->
   <div class="stats-row">
-    <div class="stat-mini">
-      <div class="stat-mini-num" id="totalRegistered">0</div>
-      <div class="stat-mini-label">נרשמו עד כה</div>
-    </div>
-    <div class="stat-mini">
-      <div class="stat-mini-num" id="totalAttending">0</div>
-      <div class="stat-mini-label">צפויים להגיע</div>
-    </div>
-    <div class="stat-mini">
-      <div class="stat-mini-num" id="totalSponsors">0</div>
-      <div class="stat-mini-label">חסויות</div>
-    </div>
+    <div class="stat-mini"><div class="stat-mini-num" id="totalRegistered">0</div><div class="stat-mini-label">משתתפים ענו</div></div>
+    <div class="stat-mini"><div class="stat-mini-num" id="totalFlexible">0</div><div class="stat-mini-label">גמישים (כל תאריך)</div></div>
+    <div class="stat-mini"><div class="stat-mini-num" id="totalSponsors">0</div><div class="stat-mini-label">מעוניינים בחסות</div></div>
   </div>
 
-  <!-- Registration form -->
+  <!-- ===== Form ===== -->
   <div id="formContainer">
+
+    <!-- Flexible card -->
     <section>
-      <h2>1. באילו תאריכים תוכלו להגיע?</h2>
-      <p class="section-subtitle">לחצו על כל תאריך שמתאים לכם (אפשר לבחור כמה שרוצים)</p>
-      <div class="dates-grid" id="datesGrid"></div>
+      <h2>1. מתי אתה זמין? 🗓️</h2>
+      <p class="section-subtitle">ענה לפי איך שנוח לך - אפשר לדלג על שאלות. כל תשובה עוזרת.</p>
+
+      <div class="flexible-card" id="flexibleCard" onclick="toggleFlexible()">
+        <div class="flexible-row">
+          <div class="flexible-emoji">🎲</div>
+          <div class="flexible-text">
+            <div class="flexible-title">אני זמין בכל תאריך - תקבעו אתם!</div>
+            <div class="flexible-sub">אם תסמן, נצרף אותך למגיעים בתאריך הסופי שייבחר</div>
+          </div>
+          <div class="flexible-check">✓</div>
+        </div>
+      </div>
+
+      <!-- Survey (hidden if flexible) -->
+      <div id="surveyDetails">
+
+        <!-- Q1: Months -->
+        <div class="survey-step">
+          <h3>📅 איזה חודש הכי מתאים לך?</h3>
+          <div class="hint">אפשר לבחור כמה. תשובת ברירת מחדל: לא משנה לי</div>
+          <div class="pill-grid" id="monthsGrid"></div>
+        </div>
+
+        <!-- Q2: Week of month -->
+        <div class="survey-step">
+          <h3>🗓️ באיזה שבוע בחודש?</h3>
+          <div class="hint">בדרך כלל יותר נוח לרוב</div>
+          <div class="pill-grid">
+            <div class="pill" data-week="start" onclick="toggleWeek(this)"><div>🌱 תחילת חודש</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">1-7</div></div>
+            <div class="pill" data-week="mid" onclick="toggleWeek(this)"><div>🌿 אמצע חודש</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">8-21</div></div>
+            <div class="pill" data-week="end" onclick="toggleWeek(this)"><div>🍂 סוף חודש</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">22-31</div></div>
+          </div>
+        </div>
+
+        <!-- Q3: Days of week -->
+        <div class="survey-step">
+          <h3>📆 אילו ימים בשבוע אתה זמין?</h3>
+          <div class="hint">חמישי ושישי הם הימים המסורתיים למפגשי מחזור</div>
+          <div class="days-grid">
+            <div class="day-pill" data-day="0" onclick="toggleDay(this)">ראשון</div>
+            <div class="day-pill" data-day="1" onclick="toggleDay(this)">שני</div>
+            <div class="day-pill" data-day="2" onclick="toggleDay(this)">שלישי</div>
+            <div class="day-pill" data-day="3" onclick="toggleDay(this)">רביעי</div>
+            <div class="day-pill" data-day="4" onclick="toggleDay(this)">חמישי</div>
+            <div class="day-pill weekend" data-day="5" onclick="toggleDay(this)">שישי</div>
+            <div class="day-pill weekend" data-day="6" onclick="toggleDay(this)">שבת</div>
+          </div>
+        </div>
+
+        <!-- Q4: Time of day -->
+        <div class="survey-step">
+          <h3>⏰ באיזו שעה ביום?</h3>
+          <div class="pill-grid">
+            <div class="pill" data-time="morning" onclick="toggleTime(this)"><div class="pill-emoji">🌅</div><div>בוקר</div></div>
+            <div class="pill" data-time="afternoon" onclick="toggleTime(this)"><div class="pill-emoji">☀️</div><div>צהריים</div></div>
+            <div class="pill" data-time="evening" onclick="toggleTime(this)"><div class="pill-emoji">🌙</div><div>ערב/לילה</div></div>
+          </div>
+        </div>
+
+        <!-- Q5: Specific dates -->
+        <div class="survey-step">
+          <h3>✅ תאריכים ספציפיים שאני יודע שאני זמין (אופציונלי)</h3>
+          <div class="hint">למשל: יש לי חופש ב-15/10</div>
+          <div class="date-input-row">
+            <input type="date" id="specificDateInput" min="2026-07-01" max="2026-12-31">
+            <button class="btn-add-date" onclick="addSpecificDate()">+ הוסף</button>
+          </div>
+          <div class="added-dates" id="specificDatesList"></div>
+        </div>
+
+        <!-- Q6: Blackout dates -->
+        <div class="survey-step">
+          <h3>❌ תאריכים שאני בטוח לא זמין (אופציונלי)</h3>
+          <div class="hint">חתונה, חופשה, חו"ל - תאריכים שאסור לקבוע בהם</div>
+          <div class="date-input-row">
+            <input type="date" id="blackoutDateInput" min="2026-07-01" max="2026-12-31">
+            <button class="btn-add-date" onclick="addBlackoutDate()">+ הוסף</button>
+          </div>
+          <div class="added-dates" id="blackoutDatesList"></div>
+        </div>
+
+      </div>
     </section>
 
+    <!-- Personal details -->
     <section>
-      <h2>2. הפרטים שלכם</h2>
-      <p class="section-subtitle">נשמור את הפרטים כדי לעדכן אתכם על התאריך הסופי</p>
+      <h2>2. הפרטים שלך 👤</h2>
+      <p class="section-subtitle">נשמור את הפרטים כדי לעדכן אותך על התאריך הסופי</p>
       <div class="form-card">
         <div class="form-row">
-          <div class="form-group">
-            <label for="firstName">שם פרטי *</label>
-            <input type="text" id="firstName" required>
-          </div>
-          <div class="form-group">
-            <label for="lastName">שם משפחה *</label>
-            <input type="text" id="lastName" required>
-          </div>
+          <div class="form-group"><label for="firstName">שם פרטי *</label><input type="text" id="firstName" required></div>
+          <div class="form-group"><label for="lastName">שם משפחה *</label><input type="text" id="lastName" required></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label for="phone">טלפון *</label>
-            <input type="tel" id="phone" placeholder="050-1234567" required>
-          </div>
-          <div class="form-group">
-            <label for="originalName">שם משפחה במחזור (אם השתנה)</label>
-            <input type="text" id="originalName" placeholder="אופציונלי">
-          </div>
+          <div class="form-group"><label for="phone">טלפון *</label><input type="tel" id="phone" placeholder="050-1234567" required></div>
+          <div class="form-group"><label for="originalName">שם משפחה במחזור (אם השתנה)</label><input type="text" id="originalName" placeholder="אופציונלי"></div>
         </div>
-
         <div class="form-group">
           <label>מגיעים עם בן/בת זוג?</label>
           <div class="toggle-group" id="spouseToggle">
@@ -574,29 +482,23 @@
             <div class="toggle-option" data-value="maybe">עוד לא יודע</div>
           </div>
         </div>
-
         <div class="form-group">
           <label for="notes">הערות (אופציונלי)</label>
-          <textarea id="notes" rows="3" placeholder="אילוצים, הצעות, או כל מה שבא לכם להוסיף..."></textarea>
+          <textarea id="notes" rows="3" placeholder="כל מה שתרצה להוסיף..."></textarea>
         </div>
       </div>
     </section>
 
-    <!-- ========== SPONSORSHIP ========== -->
+    <!-- Sponsorship -->
     <section>
       <h2>3. רוצה לתת חסות? ✨</h2>
       <p class="section-subtitle">אנחנו מחפשים אנשים שיעזרו לנו לעשות את האירוע מיוחד</p>
       <div class="sponsor-card">
         <div class="sponsor-header">
           <div class="sponsor-icon">💎</div>
-          <div>
-            <div class="sponsor-title">תהיו חלק מההפקה</div>
-          </div>
+          <div><div class="sponsor-title">תהיו חלק מההפקה</div></div>
         </div>
-        <div class="sponsor-desc">
-          בלי תקציב גדול אי אפשר להפיק אירוע מיוחד. כל תרומה, גדולה או קטנה, נחשבת.
-        </div>
-
+        <div class="sponsor-desc">בלי תקציב גדול אי אפשר להפיק אירוע מיוחד. כל תרומה, גדולה או קטנה, נחשבת.</div>
         <div class="form-group" style="margin-bottom: 0;">
           <label>האם תרצה לתת חסות / להיות שותף בהפקה?</label>
           <div class="toggle-group" id="sponsorToggle">
@@ -605,12 +507,8 @@
             <div class="toggle-option" data-value="no">לא כרגע</div>
           </div>
         </div>
-
-        <!-- Sponsor details (revealed if yes/maybe) -->
         <div class="sponsor-details" id="sponsorDetails">
-          <label style="font-size: 14px; color: var(--text-muted); font-weight: 500; display: block; margin-bottom: 10px;">
-            איזה סוג חסות מעניין אותך? (אפשר לבחור כמה)
-          </label>
+          <label style="font-size: 14px; color: var(--text-muted); font-weight: 500; display: block; margin-bottom: 10px;">איזה סוג חסות מעניין אותך? (אפשר לבחור כמה)</label>
           <div class="sponsor-types" id="sponsorTypes">
             <div class="sponsor-type" data-value="food">🍽️ כיבוד / קייטרינג</div>
             <div class="sponsor-type" data-value="venue">🏛️ מקום / השכרת אולם</div>
@@ -622,16 +520,13 @@
             <div class="sponsor-type" data-value="money">💰 תרומה כספית</div>
             <div class="sponsor-type" data-value="other">✨ אחר</div>
           </div>
-
           <div class="form-group" style="margin-top: 16px;">
             <label for="sponsorDetailsText">פרטים נוספים (סכום משוער, השירות שתספק, וכו')</label>
-            <textarea id="sponsorDetailsText" rows="3" placeholder="לדוגמה: אני בעל מסעדה ואוכל לתרום אוכל ל-50 איש / יש לי חברת צילום ואצלם בחינם..."></textarea>
+            <textarea id="sponsorDetailsText" rows="3" placeholder="לדוגמה: אני בעל מסעדה ואוכל לתרום אוכל ל-50 איש..."></textarea>
           </div>
-
           <div class="contact-info-box">
             💬 לאחר שתשלח את הטופס, נחזור אליך בהקדם.<br>
-            רוצה לדבר עכשיו? צור קשר עם <strong>ניל - מנהל האירוע</strong>:
-            <br>
+            רוצה לדבר עכשיו? צור קשר עם <strong>ניל - מנהל האירוע</strong>:<br>
             <a href="https://wa.me/972544897224" target="_blank">📱 וואטסאפ</a>
             &nbsp;•&nbsp;
             <a href="tel:054-489-7224">📞 טלפון: 054-489-7224</a>
@@ -641,134 +536,81 @@
     </section>
 
     <button class="submit-btn" id="submitBtn" onclick="submitForm()">
-      <span id="submitBtnText">שלחו את הבחירה ✨</span>
+      <span id="submitBtnText">שלחו את התשובות ✨</span>
     </button>
   </div>
 
-  <!-- Success message -->
+  <!-- Success -->
   <div class="success-msg" id="successMsg">
     <h3 id="successTitle">🎉 תודה רבה!</h3>
-    <p id="successText">הבחירה שלכם נקלטה. ניצור איתכם קשר ברגע שיהיה תאריך סופי.</p>
+    <p id="successText">התשובות שלך נשמרו. ניצור איתך קשר ברגע שיהיה תאריך סופי.</p>
     <div id="sponsorFollowup" style="display:none; margin-top: 20px; padding: 20px; background: rgba(245, 158, 11, 0.1); border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.3);">
       <strong>💎 תודה על הנכונות לתת חסות!</strong><br>
       ניל יחזור אליך תוך 24-48 שעות לסגירת הפרטים.<br>
       <a href="https://wa.me/972544897224" target="_blank" style="display:inline-block; margin-top:12px; color: var(--primary); font-weight: 600;">לחץ כאן לפנייה ישירה לניל בוואטסאפ ←</a>
     </div>
     <br>
-    <a href="https://chat.whatsapp.com/FEDcxrWADE4DKoGXow7PdI" target="_blank" rel="noopener" style="display:inline-block; margin-top:20px; background:#25D366; color:white; padding:14px 24px; border-radius:12px; text-decoration:none; font-weight:700;">
-      💬 הצטרפו לקבוצת הוואטסאפ של המחזור
-    </a>
+    <a href="https://chat.whatsapp.com/FEDcxrWADE4DKoGXow7PdI" target="_blank" rel="noopener" style="display:inline-block; margin-top:20px; background:#25D366; color:white; padding:14px 24px; border-radius:12px; text-decoration:none; font-weight:700;">💬 הצטרפו לקבוצת הוואטסאפ של המחזור</a>
     <br>
     <button class="btn" style="margin-top: 16px;" onclick="resetForm()">סיימתי, חזרה לראשי</button>
   </div>
 
-  <!-- WhatsApp floating button -->
   <a href="https://chat.whatsapp.com/FEDcxrWADE4DKoGXow7PdI" target="_blank" rel="noopener" class="whatsapp-float" title="הצטרפו לקבוצת הוואטסאפ">
     <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
   </a>
 
-  <div class="admin-link">
-    <a onclick="showAdmin(event)">פאנל ניהול</a>
-  </div>
+  <div class="admin-link"><a onclick="showAdmin(event)">פאנל ניהול</a></div>
 </div>
 
-<!-- ====== EDIT EXISTING MODAL ====== -->
+<!-- Edit existing modal -->
 <div class="modal-overlay" id="editModal">
-  <div class="modal" style="position: relative;">
+  <div class="modal">
     <button class="modal-close" onclick="closeEditModal()">×</button>
-    <h3>🔍 מציאת הרשמה קיימת</h3>
-    <p>הקלד את מספר הטלפון שאיתו נרשמת קודם, ונטען את הפרטים שלך.</p>
-    <div class="form-group">
-      <label for="lookupPhone">מספר טלפון</label>
-      <input type="tel" id="lookupPhone" placeholder="050-1234567">
-    </div>
+    <h3>🔍 מציאת תשובה קיימת</h3>
+    <p>הקלד את מספר הטלפון שאיתו ענית קודם, ונטען את התשובות שלך.</p>
+    <div class="form-group"><label for="lookupPhone">מספר טלפון</label><input type="tel" id="lookupPhone" placeholder="050-1234567"></div>
     <div class="modal-actions">
-      <button class="btn btn-primary" onclick="findExisting()" style="flex: 1;">מצא הרשמה</button>
+      <button class="btn btn-primary" onclick="findExisting()" style="flex: 1;">מצא תשובה</button>
       <button class="btn" onclick="closeEditModal()">ביטול</button>
     </div>
   </div>
 </div>
 
-<!-- ====== ADMIN PANEL ====== -->
+<!-- ADMIN PANEL -->
 <div id="adminPanel" class="admin-panel container">
   <button class="admin-back" onclick="hideAdmin()">→ חזרה לאתר</button>
   <h1 style="font-size: 36px; margin-bottom: 8px;">פאנל ניהול</h1>
-  <p class="subtitle" style="text-align: right; margin: 0 0 30px 0;">מבט מלא על הנתונים והססטיסטיקה</p>
-
-  <div class="leading-card">
-    <div class="leading-label">תאריך מוביל</div>
-    <div class="leading-date" id="adminLeadingDate">-</div>
-    <div class="leading-count" id="adminLeadingCount">-</div>
-  </div>
+  <p class="subtitle" style="text-align: right; margin: 0 0 30px 0;">מבט מלא על התשובות וההמלצות</p>
 
   <div class="stats-row">
-    <div class="stat-mini">
-      <div class="stat-mini-num" id="adminTotalReg">0</div>
-      <div class="stat-mini-label">סה"כ נרשמים</div>
-    </div>
-    <div class="stat-mini">
-      <div class="stat-mini-num" id="adminTotalAtt">0</div>
-      <div class="stat-mini-label">צפויים (כולל זוגות)</div>
-    </div>
-    <div class="stat-mini">
-      <div class="stat-mini-num" id="adminTotalSponsors">0</div>
-      <div class="stat-mini-label">מעוניינים לתת חסות</div>
-    </div>
+    <div class="stat-mini"><div class="stat-mini-num" id="adminTotalReg">0</div><div class="stat-mini-label">סה"כ משתתפים</div></div>
+    <div class="stat-mini"><div class="stat-mini-num" id="adminTotalAtt">0</div><div class="stat-mini-label">צפויים (כולל זוגות)</div></div>
+    <div class="stat-mini"><div class="stat-mini-num" id="adminTotalSponsors">0</div><div class="stat-mini-label">מעוניינים בחסות</div></div>
   </div>
 
-  <!-- Charts -->
-  <div class="charts-grid">
-    <div class="chart-card">
-      <h3>🗓️ פופולריות תאריכים</h3>
-      <canvas id="datesChart"></canvas>
-    </div>
-    <div class="chart-card">
-      <h3>💑 הגעה עם בן/בת זוג</h3>
-      <canvas id="spouseChart"></canvas>
-    </div>
-    <div class="chart-card">
-      <h3>💎 סוגי חסויות מבוקשות</h3>
-      <canvas id="sponsorChart"></canvas>
-    </div>
-    <div class="chart-card">
-      <h3>📈 הרשמות לאורך זמן</h3>
-      <canvas id="timelineChart"></canvas>
-    </div>
+  <h2 style="margin-top:32px">🏆 TOP 10 תאריכים מומלצים</h2>
+  <p class="section-subtitle">תאריכים מסודרים לפי כמה אנשים זמינים בהם</p>
+  <div class="top-dates-list" id="adminTopDatesList"></div>
+
+  <div class="charts-grid" style="margin-top: 32px;">
+    <div class="chart-card"><h3>📅 חודשים מועדפים</h3><canvas id="monthsChart"></canvas></div>
+    <div class="chart-card"><h3>📆 ימים בשבוע</h3><canvas id="daysChart"></canvas></div>
+    <div class="chart-card"><h3>⏰ שעות מועדפות</h3><canvas id="timesChart"></canvas></div>
+    <div class="chart-card"><h3>💎 סוגי חסויות מבוקשות</h3><canvas id="sponsorChart"></canvas></div>
   </div>
 
-  <!-- Sponsors highlight section -->
   <h2 style="margin-top: 40px;">💎 רשימת חסויות פוטנציאליות</h2>
   <div class="registrations-table">
-    <table id="sponsorsTable">
-      <thead>
-        <tr>
-          <th>שם</th>
-          <th>טלפון</th>
-          <th>סטטוס</th>
-          <th>סוגי חסות</th>
-          <th>פרטים</th>
-        </tr>
-      </thead>
+    <table>
+      <thead><tr><th>שם</th><th>טלפון</th><th>סטטוס</th><th>סוגי חסות</th><th>פרטים</th></tr></thead>
       <tbody id="sponsorsBody"></tbody>
     </table>
   </div>
 
-  <!-- All registrations -->
-  <h2 style="margin-top: 40px;">📋 רשימת כל הנרשמים</h2>
+  <h2 style="margin-top: 40px;">📋 רשימת כל המשתתפים</h2>
   <div class="registrations-table">
-    <table id="registrationsTable">
-      <thead>
-        <tr>
-          <th>שם מלא</th>
-          <th>טלפון</th>
-          <th>תאריכים</th>
-          <th>זוגי</th>
-          <th>חסות</th>
-          <th>הערות</th>
-          <th>עודכן</th>
-          <th></th>
-        </tr>
-      </thead>
+    <table>
+      <thead><tr><th>שם מלא</th><th>טלפון</th><th>זמינות</th><th>זוגי</th><th>חסות</th><th>הערות</th><th>עודכן</th><th></th></tr></thead>
       <tbody id="registrationsBody"></tbody>
     </table>
   </div>
@@ -777,28 +619,33 @@
     <button class="btn btn-primary" onclick="manualRefresh()">🔄 רענן מ-Google Sheets</button>
     <button class="btn" onclick="exportCSV()">📥 ייצא ל-CSV (Excel)</button>
     <button class="btn" onclick="exportJSON()">💾 גיבוי JSON</button>
-    <button class="btn" onclick="importJSON()">📤 שחזור מגיבוי</button>
     <button class="btn btn-danger" onclick="clearAll()">🗑️ מחק הכל (מקומי בלבד)</button>
-    <input type="file" id="importInput" accept=".json" style="display:none" onchange="handleImport(event)">
   </div>
 </div>
 
 <script>
-// ============ CONFIGURATION - EDIT THESE ============
-const DATE_OPTIONS = [
-  { id: 'd1', date: '2026-09-10', label: 'יום חמישי', timeOfDay: 'בערב', display: '10 בספטמבר 2026' },
-  { id: 'd2', date: '2026-09-25', label: 'יום שישי', timeOfDay: 'בצהריים', display: '25 בספטמבר 2026' },
-  { id: 'd3', date: '2026-10-15', label: 'יום חמישי', timeOfDay: 'בערב', display: '15 באוקטובר 2026' },
-  { id: 'd4', date: '2026-10-30', label: 'יום שישי', timeOfDay: 'בצהריים', display: '30 באוקטובר 2026' },
-  { id: 'd5', date: '2026-11-12', label: 'יום חמישי', timeOfDay: 'בערב', display: '12 בנובמבר 2026' },
-];
+// ============ CONFIGURATION ============
 const ADMIN_PASSWORD = '2006';
 const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxiRirzo2_Jcx91rkGlI1GPlLX6D6rJCZPxIrGZquPuH9lZzFLxpWyURl5AEuK_HsCH/exec';
-const EVENT_MANAGER = {
-  name: 'ניל',
-  phone: '054-489-7224',
-  whatsapp: '972544897224'
-};
+const EVENT_MANAGER = { name: 'ניל', phone: '054-489-7224', whatsapp: '972544897224' };
+
+// Available months (July 2026 - December 2026)
+const MONTHS = [
+  { key: '2026-07', label: 'יולי 2026', emoji: '🌞' },
+  { key: '2026-08', label: 'אוגוסט 2026', emoji: '☀️' },
+  { key: '2026-09', label: 'ספטמבר 2026', emoji: '🍂', warning: 'חגים' },
+  { key: '2026-10', label: 'אוקטובר 2026', emoji: '🍁' },
+  { key: '2026-11', label: 'נובמבר 2026', emoji: '🌧️' },
+  { key: '2026-12', label: 'דצמבר 2026', emoji: '❄️', warning: 'חנוכה' },
+];
+
+// Holidays to avoid
+const HOLIDAY_DATES = ['2026-07-23','2026-09-12','2026-09-13','2026-09-21','2026-09-25','2026-09-26','2026-09-27','2026-09-28','2026-09-29','2026-09-30','2026-10-01','2026-10-02','2026-10-03','2026-12-04','2026-12-05','2026-12-06','2026-12-07','2026-12-08','2026-12-09','2026-12-10','2026-12-11','2026-12-12'];
+
+const DAY_NAMES = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+const MONTH_NAMES = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+const TIME_LABELS = { morning: 'בוקר', afternoon: 'צהריים', evening: 'בערב' };
+const WEEK_LABELS = { start: 'תחילת חודש', mid: 'אמצע חודש', end: 'סוף חודש' };
 const SPONSOR_LABELS = {
   food: '🍽️ כיבוד', venue: '🏛️ מקום', music: '🎵 מוזיקה',
   photo: '📸 צילום', prizes: '🎁 פרסים', alcohol: '🍷 בר',
@@ -807,14 +654,20 @@ const SPONSOR_LABELS = {
 
 // ============ STATE ============
 let registrations = JSON.parse(localStorage.getItem('reunion_registrations') || '[]');
-let selectedDates = new Set();
-let selectedSpouse = null;
-let selectedSponsor = null;
-let selectedSponsorTypes = new Set();
+let isFlexible = false;
+let selMonths = new Set();
+let selWeeks = new Set();
+let selDays = new Set();
+let selTimes = new Set();
+let specificDates = [];
+let blackoutDates = [];
+let selSpouse = null;
+let selSponsor = null;
+let selSponsorTypes = new Set();
 let editingId = null;
 let charts = {};
 
-// ============ GOOGLE SHEETS SYNC ============
+// ============ SHEETS SYNC ============
 async function syncFromSheets() {
   if (!GOOGLE_SHEETS_URL) return;
   try {
@@ -824,12 +677,9 @@ async function syncFromSheets() {
     if (Array.isArray(data)) {
       registrations = data;
       localStorage.setItem('reunion_registrations', JSON.stringify(registrations));
-      renderDates();
-      updatePublicStats();
+      updateLiveResults();
     }
-  } catch (err) {
-    console.warn('Could not sync from Sheets:', err);
-  }
+  } catch (err) { console.warn('Could not sync from Sheets:', err); }
 }
 
 async function sendToSheets(record, action) {
@@ -841,17 +691,16 @@ async function sendToSheets(record, action) {
       body: JSON.stringify({ ...record, action })
     });
     return await res.json();
-  } catch (err) {
-    return { success: false, error: err.toString() };
-  }
+  } catch (err) { return { success: false, error: err.toString() }; }
 }
 
+// ============ INIT ============
 async function init() {
-  renderDates();
-  updatePublicStats();
+  renderMonths();
   setupSpouseToggle();
   setupSponsorToggle();
   setupSponsorTypes();
+  updateLiveResults();
   await syncFromSheets();
   const savedId = localStorage.getItem('reunion_my_id');
   if (savedId) {
@@ -861,37 +710,39 @@ async function init() {
   if (GOOGLE_SHEETS_URL) setInterval(syncFromSheets, 30000);
 }
 
-function renderDates() {
-  const grid = document.getElementById('datesGrid');
-  grid.innerHTML = '';
-  const counts = getDateCounts();
-  DATE_OPTIONS.forEach(opt => {
-    const date = new Date(opt.date);
-    const dayNum = date.getDate();
-    const monthNames = ['ינו', 'פבר', 'מרץ', 'אפר', 'מאי', 'יונ', 'יול', 'אוג', 'ספט', 'אוק', 'נוב', 'דצמ'];
-    const monthName = monthNames[date.getMonth()];
-    const card = document.createElement('div');
-    card.className = 'date-card' + (selectedDates.has(opt.id) ? ' selected' : '');
-    card.onclick = () => toggleDate(opt.id);
-    card.innerHTML = `
-      <div class="date-day"><div class="date-day-num">${dayNum}</div><div class="date-day-month">${monthName}</div></div>
-      <div class="date-info"><div class="date-info-day">${opt.label} ${opt.timeOfDay}</div><div class="date-info-full">${opt.display}</div></div>
-      <div class="date-popularity">${counts[opt.id] || 0} אישרו</div>`;
-    grid.appendChild(card);
-  });
+function renderMonths() {
+  const grid = document.getElementById('monthsGrid');
+  grid.innerHTML = MONTHS.map(m =>
+    `<div class="pill" data-month="${m.key}" onclick="toggleMonth(this)">
+      <div class="pill-emoji">${m.emoji}</div>
+      <div>${m.label}</div>
+      ${m.warning ? `<div style="font-size:11px;color:var(--warning);margin-top:2px">⚠ ${m.warning}</div>` : ''}
+    </div>`
+  ).join('');
 }
 
-function toggleDate(id) {
-  if (selectedDates.has(id)) selectedDates.delete(id); else selectedDates.add(id);
-  renderDates();
+function toggleMonth(el) { toggleSet(el, 'month', selMonths); }
+function toggleWeek(el) { toggleSet(el, 'week', selWeeks); }
+function toggleDay(el) { toggleSet(el, 'day', selDays); }
+function toggleTime(el) { toggleSet(el, 'time', selTimes); }
+
+function toggleSet(el, attr, set) {
+  const val = el.dataset[attr];
+  if (set.has(val)) { set.delete(val); el.classList.remove('selected'); }
+  else { set.add(val); el.classList.add('selected'); }
+}
+
+function toggleFlexible() {
+  isFlexible = !isFlexible;
+  document.getElementById('flexibleCard').classList.toggle('active', isFlexible);
+  document.getElementById('surveyDetails').style.display = isFlexible ? 'none' : 'block';
 }
 
 function setupSpouseToggle() {
   document.querySelectorAll('#spouseToggle .toggle-option').forEach(el => {
     el.onclick = () => {
       document.querySelectorAll('#spouseToggle .toggle-option').forEach(e => e.classList.remove('selected'));
-      el.classList.add('selected');
-      selectedSpouse = el.dataset.value;
+      el.classList.add('selected'); selSpouse = el.dataset.value;
     };
   });
 }
@@ -901,10 +752,10 @@ function setupSponsorToggle() {
     el.onclick = () => {
       document.querySelectorAll('#sponsorToggle .toggle-option').forEach(e => e.classList.remove('selected'));
       el.classList.add('selected');
-      selectedSponsor = el.dataset.value;
+      selSponsor = el.dataset.value;
       const details = document.getElementById('sponsorDetails');
-      if (selectedSponsor === 'yes' || selectedSponsor === 'maybe') details.classList.add('show');
-      else { details.classList.remove('show'); selectedSponsorTypes.clear(); document.querySelectorAll('.sponsor-type').forEach(el => el.classList.remove('selected')); }
+      if (selSponsor === 'yes' || selSponsor === 'maybe') details.classList.add('show');
+      else { details.classList.remove('show'); selSponsorTypes.clear(); document.querySelectorAll('.sponsor-type').forEach(el => el.classList.remove('selected')); }
     };
   });
 }
@@ -913,47 +764,104 @@ function setupSponsorTypes() {
   document.querySelectorAll('.sponsor-type').forEach(el => {
     el.onclick = () => {
       const val = el.dataset.value;
-      if (selectedSponsorTypes.has(val)) { selectedSponsorTypes.delete(val); el.classList.remove('selected'); }
-      else { selectedSponsorTypes.add(val); el.classList.add('selected'); }
+      if (selSponsorTypes.has(val)) { selSponsorTypes.delete(val); el.classList.remove('selected'); }
+      else { selSponsorTypes.add(val); el.classList.add('selected'); }
     };
   });
 }
 
+// ============ Dates list management ============
+function addSpecificDate() {
+  const val = document.getElementById('specificDateInput').value;
+  if (!val) return;
+  if (specificDates.includes(val)) { alert('כבר הוספת את התאריך'); return; }
+  specificDates.push(val);
+  document.getElementById('specificDateInput').value = '';
+  renderDateList('specificDatesList', specificDates, 'removeSpecificDate', false);
+}
+function removeSpecificDate(idx) { specificDates.splice(idx, 1); renderDateList('specificDatesList', specificDates, 'removeSpecificDate', false); }
+function addBlackoutDate() {
+  const val = document.getElementById('blackoutDateInput').value;
+  if (!val) return;
+  if (blackoutDates.includes(val)) { alert('כבר הוספת את התאריך'); return; }
+  blackoutDates.push(val);
+  document.getElementById('blackoutDateInput').value = '';
+  renderDateList('blackoutDatesList', blackoutDates, 'removeBlackoutDate', true);
+}
+function removeBlackoutDate(idx) { blackoutDates.splice(idx, 1); renderDateList('blackoutDatesList', blackoutDates, 'removeBlackoutDate', true); }
+
+function renderDateList(elId, list, removeFn, blackout) {
+  document.getElementById(elId).innerHTML = list.map((d, i) =>
+    `<div class="added-date-row ${blackout ? 'blackout' : ''}">
+      <span>${formatNiceDate(d)}</span>
+      <button class="added-date-remove" onclick="${removeFn}(${i})">×</button>
+    </div>`).join('');
+}
+
+function formatNiceDate(d) {
+  const dt = new Date(d);
+  return `${DAY_NAMES[dt.getDay()]}, ${dt.getDate()} ב${MONTH_NAMES[dt.getMonth()]} ${dt.getFullYear()}`;
+}
+
+// ============ Load existing ============
 function loadIntoForm(reg, isViaSearch) {
   editingId = reg.id;
-  selectedDates = new Set(reg.dates || []);
-  selectedSpouse = reg.spouse;
-  selectedSponsor = reg.sponsorship?.interested || null;
-  selectedSponsorTypes = new Set(reg.sponsorship?.types || []);
+  const av = reg.availability || {};
+  isFlexible = !!av.flexible;
+  selMonths = new Set(av.months || []);
+  selWeeks = new Set(av.weeks || []);
+  selDays = new Set((av.days || []).map(String));
+  selTimes = new Set(av.times || []);
+  specificDates = [...(av.specificDates || [])];
+  blackoutDates = [...(av.blackoutDates || [])];
+  selSpouse = reg.spouse;
+  selSponsor = reg.sponsorship?.interested || null;
+  selSponsorTypes = new Set(reg.sponsorship?.types || []);
+
   document.getElementById('firstName').value = reg.firstName || '';
   document.getElementById('lastName').value = reg.lastName || '';
   document.getElementById('phone').value = reg.phone || '';
   document.getElementById('originalName').value = reg.originalName || '';
   document.getElementById('notes').value = reg.notes || '';
   document.getElementById('sponsorDetailsText').value = reg.sponsorship?.details || '';
-  document.querySelectorAll('#spouseToggle .toggle-option').forEach(e => e.classList.toggle('selected', e.dataset.value === selectedSpouse));
-  document.querySelectorAll('#sponsorToggle .toggle-option').forEach(e => e.classList.toggle('selected', e.dataset.value === selectedSponsor));
-  document.querySelectorAll('.sponsor-type').forEach(e => e.classList.toggle('selected', selectedSponsorTypes.has(e.dataset.value)));
-  if (selectedSponsor === 'yes' || selectedSponsor === 'maybe') document.getElementById('sponsorDetails').classList.add('show');
-  renderDates();
+
+  document.getElementById('flexibleCard').classList.toggle('active', isFlexible);
+  document.getElementById('surveyDetails').style.display = isFlexible ? 'none' : 'block';
+
+  document.querySelectorAll('[data-month]').forEach(el => el.classList.toggle('selected', selMonths.has(el.dataset.month)));
+  document.querySelectorAll('[data-week]').forEach(el => el.classList.toggle('selected', selWeeks.has(el.dataset.week)));
+  document.querySelectorAll('[data-day]').forEach(el => el.classList.toggle('selected', selDays.has(el.dataset.day)));
+  document.querySelectorAll('[data-time]').forEach(el => el.classList.toggle('selected', selTimes.has(el.dataset.time)));
+  renderDateList('specificDatesList', specificDates, 'removeSpecificDate', false);
+  renderDateList('blackoutDatesList', blackoutDates, 'removeBlackoutDate', true);
+
+  document.querySelectorAll('#spouseToggle .toggle-option').forEach(e => e.classList.toggle('selected', e.dataset.value === selSpouse));
+  document.querySelectorAll('#sponsorToggle .toggle-option').forEach(e => e.classList.toggle('selected', e.dataset.value === selSponsor));
+  document.querySelectorAll('.sponsor-type').forEach(e => e.classList.toggle('selected', selSponsorTypes.has(e.dataset.value)));
+  if (selSponsor === 'yes' || selSponsor === 'maybe') document.getElementById('sponsorDetails').classList.add('show');
+
   document.getElementById('welcomeBackName').textContent = `ברוך השב, ${reg.firstName}! 👋`;
   document.getElementById('welcomeBack').classList.add('show');
-  document.getElementById('submitBtnText').textContent = 'עדכן את הבחירה 💾';
+  document.getElementById('submitBtnText').textContent = 'עדכן את התשובות 💾';
+
   if (isViaSearch) { closeEditModal(); window.scrollTo({top: 0, behavior: 'smooth'}); }
 }
 
 function cancelEdit() {
-  editingId = null;
-  selectedDates.clear();
-  selectedSpouse = null;
-  selectedSponsor = null;
-  selectedSponsorTypes.clear();
+  editingId = null; isFlexible = false;
+  selMonths.clear(); selWeeks.clear(); selDays.clear(); selTimes.clear();
+  specificDates = []; blackoutDates = [];
+  selSpouse = null; selSponsor = null; selSponsorTypes.clear();
+
   ['firstName','lastName','phone','originalName','notes','sponsorDetailsText'].forEach(id => document.getElementById(id).value = '');
-  document.querySelectorAll('.toggle-option, .sponsor-type').forEach(e => e.classList.remove('selected'));
+  document.querySelectorAll('.pill, .day-pill, .toggle-option, .sponsor-type').forEach(e => e.classList.remove('selected'));
+  document.getElementById('flexibleCard').classList.remove('active');
+  document.getElementById('surveyDetails').style.display = 'block';
   document.getElementById('sponsorDetails').classList.remove('show');
   document.getElementById('welcomeBack').classList.remove('show');
-  document.getElementById('submitBtnText').textContent = 'שלחו את הבחירה ✨';
-  renderDates();
+  document.getElementById('submitBtnText').textContent = 'שלחו את התשובות ✨';
+  document.getElementById('specificDatesList').innerHTML = '';
+  document.getElementById('blackoutDatesList').innerHTML = '';
 }
 
 function openEditExisting() { document.getElementById('editModal').classList.add('show'); document.getElementById('lookupPhone').focus(); }
@@ -963,11 +871,12 @@ function findExisting() {
   const phone = document.getElementById('lookupPhone').value.trim().replace(/[-\s]/g, '');
   if (!phone) { alert('הקלד מספר טלפון'); return; }
   const found = registrations.find(r => r.phone.replace(/[-\s]/g, '') === phone);
-  if (!found) { alert('לא נמצאה הרשמה עם המספר הזה.'); return; }
+  if (!found) { alert('לא נמצאה תשובה עם המספר הזה.'); return; }
   localStorage.setItem('reunion_my_id', found.id);
   loadIntoForm(found, true);
 }
 
+// ============ SUBMIT ============
 async function submitForm() {
   const firstName = document.getElementById('firstName').value.trim();
   const lastName = document.getElementById('lastName').value.trim();
@@ -975,20 +884,38 @@ async function submitForm() {
   const originalName = document.getElementById('originalName').value.trim();
   const notes = document.getElementById('notes').value.trim();
   const sponsorDetails = document.getElementById('sponsorDetailsText').value.trim();
+
   if (!firstName || !lastName || !phone) { alert('אנא מלאו שם פרטי, שם משפחה וטלפון'); return; }
-  if (selectedDates.size === 0) { alert('אנא בחרו לפחות תאריך אחד'); return; }
-  if (!selectedSpouse) { alert('אנא ציינו אם תגיעו עם בן/בת זוג'); return; }
-  const sponsorship = selectedSponsor ? { interested: selectedSponsor, types: Array.from(selectedSponsorTypes), details: sponsorDetails } : null;
+  if (!selSpouse) { alert('אנא ציינו אם תגיעו עם בן/בת זוג'); return; }
+
+  // If not flexible, require at least one answer
+  if (!isFlexible && selMonths.size === 0 && selWeeks.size === 0 && selDays.size === 0 && selTimes.size === 0 && specificDates.length === 0) {
+    if (!confirm('לא ענית על אף שאלה לגבי זמינות. האם להמשיך ולסמן אותך כגמיש (זמין לכל תאריך)?')) return;
+    isFlexible = true;
+  }
+
+  const availability = {
+    flexible: isFlexible,
+    months: Array.from(selMonths),
+    weeks: Array.from(selWeeks),
+    days: Array.from(selDays),
+    times: Array.from(selTimes),
+    specificDates: [...specificDates],
+    blackoutDates: [...blackoutDates]
+  };
+  const sponsorship = selSponsor ? { interested: selSponsor, types: Array.from(selSponsorTypes), details: sponsorDetails } : null;
+
   const submitBtn = document.getElementById('submitBtn');
   const btnText = document.getElementById('submitBtnText');
   const originalText = btnText.textContent;
   submitBtn.disabled = true;
   btnText.textContent = '⏳ שולח...';
+
   let record, isUpdate = false;
   if (editingId) {
     const idx = registrations.findIndex(r => r.id === editingId);
     if (idx >= 0) {
-      record = { ...registrations[idx], firstName, lastName, phone, originalName, notes, dates: Array.from(selectedDates), spouse: selectedSpouse, sponsorship, updatedAt: new Date().toISOString() };
+      record = { ...registrations[idx], firstName, lastName, phone, originalName, notes, dates: availability, spouse: selSpouse, sponsorship, updatedAt: new Date().toISOString() };
       registrations[idx] = record;
       isUpdate = true;
     }
@@ -996,59 +923,133 @@ async function submitForm() {
     const cleanPhone = phone.replace(/[-\s]/g, '');
     const existing = registrations.find(r => r.phone.replace(/[-\s]/g, '') === cleanPhone);
     if (existing) {
-      if (!confirm('כבר קיימת הרשמה עם הטלפון הזה. לעדכן אותה?')) { submitBtn.disabled = false; btnText.textContent = originalText; return; }
+      if (!confirm('כבר קיימת תשובה עם הטלפון הזה. לעדכן אותה?')) { submitBtn.disabled = false; btnText.textContent = originalText; return; }
       editingId = existing.id;
-      submitBtn.disabled = false;
-      btnText.textContent = originalText;
+      submitBtn.disabled = false; btnText.textContent = originalText;
       return submitForm();
     }
-    record = { id: 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), firstName, lastName, phone, originalName, notes, dates: Array.from(selectedDates), spouse: selectedSpouse, sponsorship, timestamp: new Date().toISOString(), updatedAt: new Date().toISOString() };
+    record = { id: 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8), firstName, lastName, phone, originalName, notes, dates: availability, spouse: selSpouse, sponsorship, timestamp: new Date().toISOString(), updatedAt: new Date().toISOString() };
     registrations.push(record);
     localStorage.setItem('reunion_my_id', record.id);
   }
   localStorage.setItem('reunion_registrations', JSON.stringify(registrations));
   await sendToSheets(record, isUpdate ? 'update' : 'insert');
+
   document.getElementById('formContainer').style.display = 'none';
   document.getElementById('welcomeBack').classList.remove('show');
   document.getElementById('successTitle').textContent = isUpdate ? '✅ עודכן בהצלחה!' : '🎉 תודה רבה!';
-  document.getElementById('successText').textContent = isUpdate ? 'הפרטים שלך עודכנו במערכת.' : 'הבחירה שלכם נקלטה. ניצור איתכם קשר ברגע שיהיה תאריך סופי.';
-  if (sponsorship && (sponsorship.interested === 'yes' || sponsorship.interested === 'maybe')) document.getElementById('sponsorFollowup').style.display = 'block';
-  else document.getElementById('sponsorFollowup').style.display = 'none';
-  submitBtn.disabled = false;
-  btnText.textContent = originalText;
+  document.getElementById('successText').textContent = isUpdate ? 'התשובות שלך עודכנו במערכת.' : 'התשובות שלך נשמרו. רענן את העמוד כדי לראות את התוצאות העדכניות.';
+  document.getElementById('sponsorFollowup').style.display = (sponsorship && (sponsorship.interested === 'yes' || sponsorship.interested === 'maybe')) ? 'block' : 'none';
+
+  submitBtn.disabled = false; btnText.textContent = originalText;
   document.getElementById('successMsg').classList.add('show');
-  updatePublicStats();
+  updateLiveResults();
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
 function resetForm() { cancelEdit(); document.getElementById('formContainer').style.display = 'block'; document.getElementById('successMsg').classList.remove('show'); window.scrollTo({top: 0, behavior: 'smooth'}); }
 
-function getDateCounts() {
-  const counts = {};
-  registrations.forEach(r => { r.dates.forEach(d => { counts[d] = (counts[d] || 0) + 1 + (r.spouse === 'yes' ? 1 : 0); }); });
-  return counts;
-}
-
-function getLeadingDate() {
-  const counts = getDateCounts();
-  let best = null, bestCount = 0;
-  DATE_OPTIONS.forEach(opt => { if ((counts[opt.id] || 0) > bestCount) { bestCount = counts[opt.id]; best = opt; } });
-  return { date: best, count: bestCount };
-}
-
-function updatePublicStats() {
-  const leading = getLeadingDate();
-  if (leading.date) {
-    document.getElementById('leadingDate').textContent = `${leading.date.label} ${leading.date.display}`;
-    document.getElementById('leadingCount').textContent = `${leading.count} אנשים יכולים להגיע ✨`;
+// ============ SMART MATCHING ALGORITHM ============
+function getCandidateDates() {
+  // Generate Thu/Fri/Sat in July-December 2026, excluding holidays
+  const dates = [];
+  const start = new Date('2026-07-01');
+  const end = new Date('2026-12-31');
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    const day = d.getDay(); // 0=Sun, 4=Thu, 5=Fri, 6=Sat
+    if (day !== 4 && day !== 5 && day !== 6) continue;
+    const iso = d.toISOString().split('T')[0];
+    if (HOLIDAY_DATES.includes(iso)) continue;
+    dates.push(iso);
   }
-  const totalAttending = registrations.reduce((sum, r) => sum + 1 + (r.spouse === 'yes' ? 1 : 0), 0);
-  const totalSponsors = registrations.filter(r => r.sponsorship && (r.sponsorship.interested === 'yes' || r.sponsorship.interested === 'maybe')).length;
-  document.getElementById('totalRegistered').textContent = registrations.length;
-  document.getElementById('totalAttending').textContent = totalAttending;
-  document.getElementById('totalSponsors').textContent = totalSponsors;
+  return dates;
 }
 
+function getWeekOfMonth(d) {
+  const day = new Date(d).getDate();
+  if (day <= 7) return 'start';
+  if (day <= 21) return 'mid';
+  return 'end';
+}
+
+function scoreDateForParticipant(dateIso, av) {
+  // Returns: 'available' | 'flexible' | 'maybe' | 'not'
+  if (!av || av.flexible) return 'flexible';
+  if (av.blackoutDates && av.blackoutDates.includes(dateIso)) return 'not';
+  if (av.specificDates && av.specificDates.includes(dateIso)) return 'available';
+
+  const d = new Date(dateIso);
+  const month = dateIso.substring(0, 7);
+  const weekPart = getWeekOfMonth(dateIso);
+  const dayOfWeek = String(d.getDay());
+
+  // Each criterion: if user specified preferences, date must match
+  if (av.months && av.months.length > 0 && !av.months.includes(month)) return 'not';
+  if (av.weeks && av.weeks.length > 0 && !av.weeks.includes(weekPart)) return 'not';
+  if (av.days && av.days.length > 0 && !av.days.includes(dayOfWeek)) return 'not';
+  // Time of day doesn't constrain the date, just informs the gathering time
+
+  return 'available';
+}
+
+function computeTopDates(limit = 10) {
+  const candidates = getCandidateDates();
+  const results = candidates.map(dateIso => {
+    let avail = 0, flex = 0, no = 0;
+    const availList = [], flexList = [], noList = [];
+    registrations.forEach(r => {
+      const av = r.dates && typeof r.dates === 'object' && !Array.isArray(r.dates) ? r.dates : null;
+      const score = scoreDateForParticipant(dateIso, av);
+      const plus = 1 + (r.spouse === 'yes' ? 1 : 0);
+      const name = `${r.firstName} ${r.lastName}${r.spouse === 'yes' ? ' +1' : ''}`;
+      if (score === 'available') { avail += plus; availList.push(name); }
+      else if (score === 'flexible') { flex += plus; flexList.push(name); }
+      else if (score === 'not') { no += plus; noList.push(name); }
+    });
+    return { date: dateIso, available: avail, flexible: flex, no, total: avail + flex, availList, flexList, noList };
+  });
+  results.sort((a, b) => b.total - a.total || a.no - b.no);
+  return results.slice(0, limit);
+}
+
+// ============ LIVE RESULTS DISPLAY ============
+function updateLiveResults() {
+  document.getElementById('totalRegistered').textContent = registrations.length;
+  const flexibleCount = registrations.filter(r => r.dates?.flexible).length;
+  document.getElementById('totalFlexible').textContent = flexibleCount;
+  const sponsorCount = registrations.filter(r => r.sponsorship && (r.sponsorship.interested === 'yes' || r.sponsorship.interested === 'maybe')).length;
+  document.getElementById('totalSponsors').textContent = sponsorCount;
+
+  document.getElementById('liveCount').textContent = `${registrations.length} משתתפים ענו`;
+
+  const top = computeTopDates(5);
+  const infoBanner = document.getElementById('liveInfo');
+  const list = document.getElementById('topDatesList');
+
+  if (registrations.length === 0) {
+    infoBanner.style.display = 'block';
+    list.innerHTML = '<div class="empty-results">היו הראשונים לענות! 🚀</div>';
+    return;
+  }
+
+  infoBanner.style.display = 'none';
+  const max = top[0]?.total || 1;
+  list.innerHTML = top.map((t, i) => {
+    const pct = registrations.length > 0 ? Math.round((t.total / (registrations.length + registrations.filter(r => r.spouse === 'yes').length)) * 100) : 0;
+    const ranks = ['gold', 'silver', 'bronze', '', ''];
+    const medals = ['🥇', '🥈', '🥉', '4', '5'];
+    return `<div class="top-date-row ${i === 0 ? 'first' : ''}">
+      <div class="rank-badge ${ranks[i] || ''}">${medals[i]}</div>
+      <div class="top-date-info">
+        <div class="top-date-name">${formatNiceDate(t.date)}</div>
+        <div class="top-date-meta">${t.available} זמינים${t.flexible ? ` • ${t.flexible} גמישים` : ''}${t.no ? ` • ${t.no} לא יכולים` : ''}</div>
+      </div>
+      <div class="top-date-score"><div class="top-date-percent">${pct}%</div><div class="top-date-count">${t.total}/${registrations.length + registrations.filter(r => r.spouse === 'yes').length}</div></div>
+    </div>`;
+  }).join('');
+}
+
+// ============ ADMIN ============
 function showAdmin(e) {
   e.preventDefault();
   const pwd = prompt('סיסמת מנהל:');
@@ -1057,41 +1058,86 @@ function showAdmin(e) {
   document.getElementById('adminPanel').classList.add('show');
   renderAdmin();
 }
-
-function hideAdmin() { document.getElementById('mainPage').style.display = 'block'; document.getElementById('adminPanel').classList.remove('show'); Object.values(charts).forEach(c => c?.destroy()); charts = {}; }
+function hideAdmin() {
+  document.getElementById('mainPage').style.display = 'block';
+  document.getElementById('adminPanel').classList.remove('show');
+  Object.values(charts).forEach(c => c?.destroy()); charts = {};
+}
 
 function renderAdmin() {
-  const leading = getLeadingDate();
-  if (leading.date) { document.getElementById('adminLeadingDate').textContent = `${leading.date.display} (${leading.date.label})`; document.getElementById('adminLeadingCount').textContent = `${leading.count} צפויים להגיע`; }
   document.getElementById('adminTotalReg').textContent = registrations.length;
   const totalAtt = registrations.reduce((sum, r) => sum + 1 + (r.spouse === 'yes' ? 1 : 0), 0);
   document.getElementById('adminTotalAtt').textContent = totalAtt;
   const sponsors = registrations.filter(r => r.sponsorship && (r.sponsorship.interested === 'yes' || r.sponsorship.interested === 'maybe'));
   document.getElementById('adminTotalSponsors').textContent = sponsors.length;
-  renderCharts();
+
+  renderAdminTopDates();
+  renderAdminCharts();
   renderSponsorsTable();
   renderRegistrationsTable();
 }
 
-function renderCharts() {
+function renderAdminTopDates() {
+  const list = document.getElementById('adminTopDatesList');
+  if (registrations.length === 0) { list.innerHTML = '<div class="empty-state">עדיין אין תשובות</div>'; return; }
+  const top = computeTopDates(10);
+  const totalCap = registrations.length + registrations.filter(r => r.spouse === 'yes').length;
+  list.innerHTML = top.map((t, i) => {
+    const pct = totalCap > 0 ? Math.round((t.total / totalCap) * 100) : 0;
+    const ranks = ['gold', 'silver', 'bronze'];
+    return `<div class="top-date-row ${i === 0 ? 'first' : ''}" style="margin-bottom: 8px;">
+      <div class="rank-badge ${ranks[i] || ''}">${i + 1}</div>
+      <div class="top-date-info">
+        <div class="top-date-name">${formatNiceDate(t.date)}</div>
+        <div class="top-date-meta">✅ ${t.available} זמינים${t.flexible ? ` • 🎲 ${t.flexible} גמישים` : ''}${t.no ? ` • ❌ ${t.no} לא יכולים` : ''}</div>
+      </div>
+      <div class="top-date-score"><div class="top-date-percent">${pct}%</div><div class="top-date-count">${t.total}/${totalCap}</div></div>
+    </div>`;
+  }).join('');
+}
+
+function renderAdminCharts() {
   Object.values(charts).forEach(c => c?.destroy());
   Chart.defaults.color = '#94a3b8';
   Chart.defaults.font.family = 'Heebo';
-  const counts = getDateCounts();
-  charts.dates = new Chart(document.getElementById('datesChart'), { type: 'bar', data: { labels: DATE_OPTIONS.map(o => o.display), datasets: [{ label: 'אישורי הגעה', data: DATE_OPTIONS.map(o => counts[o.id] || 0), backgroundColor: 'rgba(99, 102, 241, 0.6)', borderColor: '#6366f1', borderWidth: 2, borderRadius: 8 }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } } });
-  const spouseCounts = { yes: 0, no: 0, maybe: 0 };
-  registrations.forEach(r => { if (spouseCounts[r.spouse] !== undefined) spouseCounts[r.spouse]++; });
-  charts.spouse = new Chart(document.getElementById('spouseChart'), { type: 'pie', data: { labels: ['עם בן/בת זוג', 'לבד', 'עוד לא ידוע'], datasets: [{ data: [spouseCounts.yes, spouseCounts.no, spouseCounts.maybe], backgroundColor: ['#ec4899', '#6366f1', '#94a3b8'], borderWidth: 0 }] }, options: { responsive: true } });
+
+  // Months popularity
+  const monthsCount = {};
+  MONTHS.forEach(m => monthsCount[m.key] = 0);
+  registrations.forEach(r => { (r.dates?.months || []).forEach(m => { if (monthsCount[m] !== undefined) monthsCount[m]++; }); });
+  charts.months = new Chart(document.getElementById('monthsChart'), {
+    type: 'bar',
+    data: { labels: MONTHS.map(m => m.label), datasets: [{ label: 'מועדפים', data: MONTHS.map(m => monthsCount[m.key]), backgroundColor: 'rgba(99,102,241,0.6)', borderColor: '#6366f1', borderWidth: 2, borderRadius: 8 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+  });
+
+  // Days of week
+  const daysCount = [0,0,0,0,0,0,0];
+  registrations.forEach(r => { (r.dates?.days || []).forEach(d => { daysCount[parseInt(d)]++; }); });
+  charts.days = new Chart(document.getElementById('daysChart'), {
+    type: 'bar',
+    data: { labels: DAY_NAMES, datasets: [{ label: 'אנשים', data: daysCount, backgroundColor: 'rgba(236,72,153,0.6)', borderColor: '#ec4899', borderWidth: 2, borderRadius: 8 }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+  });
+
+  // Times
+  const timesCount = { morning: 0, afternoon: 0, evening: 0 };
+  registrations.forEach(r => { (r.dates?.times || []).forEach(t => { if (timesCount[t] !== undefined) timesCount[t]++; }); });
+  charts.times = new Chart(document.getElementById('timesChart'), {
+    type: 'doughnut',
+    data: { labels: ['בוקר', 'צהריים', 'ערב'], datasets: [{ data: [timesCount.morning, timesCount.afternoon, timesCount.evening], backgroundColor: ['#fbbf24', '#f59e0b', '#6366f1'], borderWidth: 0 }] },
+    options: { responsive: true }
+  });
+
+  // Sponsor types
   const sponsorTypeCounts = {};
   Object.keys(SPONSOR_LABELS).forEach(k => sponsorTypeCounts[k] = 0);
   registrations.forEach(r => { r.sponsorship?.types?.forEach(t => { if (sponsorTypeCounts[t] !== undefined) sponsorTypeCounts[t]++; }); });
-  charts.sponsor = new Chart(document.getElementById('sponsorChart'), { type: 'bar', data: { labels: Object.keys(SPONSOR_LABELS).map(k => SPONSOR_LABELS[k]), datasets: [{ label: 'מספר מעוניינים', data: Object.keys(SPONSOR_LABELS).map(k => sponsorTypeCounts[k]), backgroundColor: 'rgba(245, 158, 11, 0.6)', borderColor: '#f59e0b', borderWidth: 2, borderRadius: 8 }] }, options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } } } } });
-  const byDay = {};
-  registrations.forEach(r => { const day = r.timestamp.split('T')[0]; byDay[day] = (byDay[day] || 0) + 1; });
-  const days = Object.keys(byDay).sort();
-  let cumulative = 0;
-  const cumData = days.map(d => cumulative += byDay[d]);
-  charts.timeline = new Chart(document.getElementById('timelineChart'), { type: 'line', data: { labels: days.map(d => new Date(d).toLocaleDateString('he-IL', {day: 'numeric', month: 'short'})), datasets: [{ label: 'סה"כ נרשמים', data: cumData, borderColor: '#ec4899', backgroundColor: 'rgba(236, 72, 153, 0.1)', fill: true, tension: 0.3 }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } } });
+  charts.sponsor = new Chart(document.getElementById('sponsorChart'), {
+    type: 'bar',
+    data: { labels: Object.keys(SPONSOR_LABELS).map(k => SPONSOR_LABELS[k]), datasets: [{ label: 'מעוניינים', data: Object.keys(SPONSOR_LABELS).map(k => sponsorTypeCounts[k]), backgroundColor: 'rgba(245,158,11,0.6)', borderColor: '#f59e0b', borderWidth: 2, borderRadius: 8 }] },
+    options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } } } }
+  });
 }
 
 function renderSponsorsTable() {
@@ -1100,25 +1146,48 @@ function renderSponsorsTable() {
   if (sponsors.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="empty-state">אין עדיין מעוניינים בחסות</td></tr>'; return; }
   tbody.innerHTML = sponsors.map(r => {
     const types = (r.sponsorship.types || []).map(t => SPONSOR_LABELS[t] || t).join(', ');
-    const status = r.sponsorship.interested === 'yes' ? '<span class="sponsor-badge" style="background:rgba(16,185,129,0.2);color:#10b981">✓ בטוח</span>' : '<span class="sponsor-badge">? אולי</span>';
+    const status = r.sponsorship.interested === 'yes'
+      ? '<span class="sponsor-badge" style="background:rgba(16,185,129,0.2);color:#10b981">✓ בטוח</span>'
+      : '<span class="sponsor-badge">? אולי</span>';
     return `<tr><td><strong>${r.firstName} ${r.lastName}</strong></td><td><a href="tel:${r.phone}" style="color:#94a3b8">${r.phone}</a></td><td>${status}</td><td>${types || '-'}</td><td>${r.sponsorship.details || '-'}</td></tr>`;
   }).join('');
 }
 
+function describeAvailability(av) {
+  if (!av || (Array.isArray(av) && av.length === 0)) return '<em>לא ענה</em>';
+  if (av.flexible) return '🎲 <strong>גמיש - כל תאריך</strong>';
+  const parts = [];
+  if (av.months?.length) parts.push('חודשים: ' + av.months.map(m => MONTHS.find(x => x.key === m)?.label || m).join(', '));
+  if (av.weeks?.length) parts.push('שבוע: ' + av.weeks.map(w => WEEK_LABELS[w]).join(', '));
+  if (av.days?.length) parts.push('ימים: ' + av.days.map(d => DAY_NAMES[parseInt(d)]).join(', '));
+  if (av.times?.length) parts.push('שעה: ' + av.times.map(t => TIME_LABELS[t]).join(', '));
+  if (av.specificDates?.length) parts.push('✅ ' + av.specificDates.map(d => formatNiceDate(d)).join(', '));
+  if (av.blackoutDates?.length) parts.push('❌ ' + av.blackoutDates.map(d => formatNiceDate(d)).join(', '));
+  return parts.join('<br>') || '<em>לא ענה</em>';
+}
+
 function renderRegistrationsTable() {
   const tbody = document.getElementById('registrationsBody');
-  if (registrations.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">עדיין אין הרשמות</td></tr>'; return; }
+  if (registrations.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="empty-state">עדיין אין תשובות</td></tr>'; return; }
   tbody.innerHTML = registrations.map(r => {
-    const dates = r.dates.map(d => { const opt = DATE_OPTIONS.find(o => o.id === d); return opt ? opt.display : d; }).join('<br>');
     const spouseText = { yes: 'כן', no: 'לא', maybe: 'אולי' }[r.spouse] || '-';
     const sponsorText = r.sponsorship?.interested === 'yes' ? '💎 כן' : r.sponsorship?.interested === 'maybe' ? '? אולי' : '-';
     const time = new Date(r.updatedAt || r.timestamp).toLocaleString('he-IL', { dateStyle: 'short', timeStyle: 'short' });
-    return `<tr><td><strong>${r.firstName} ${r.lastName}</strong>${r.originalName ? `<br><small style="color:#94a3b8">לשעבר: ${r.originalName}</small>` : ''}</td><td>${r.phone}</td><td>${dates}</td><td>${spouseText}</td><td>${sponsorText}</td><td>${r.notes || '-'}</td><td>${time}</td><td><button class="btn btn-danger" style="padding:4px 10px;font-size:12px" onclick="deleteReg('${r.id}')">מחק</button></td></tr>`;
+    return `<tr>
+      <td><strong>${r.firstName} ${r.lastName}</strong>${r.originalName ? `<br><small style="color:#94a3b8">לשעבר: ${r.originalName}</small>` : ''}</td>
+      <td>${r.phone}</td>
+      <td>${describeAvailability(r.dates)}</td>
+      <td>${spouseText}</td>
+      <td>${sponsorText}</td>
+      <td>${r.notes || '-'}</td>
+      <td>${time}</td>
+      <td><button class="btn btn-danger" style="padding:4px 10px;font-size:12px" onclick="deleteReg('${r.id}')">מחק</button></td>
+    </tr>`;
   }).join('');
 }
 
 async function deleteReg(id) {
-  if (!confirm('למחוק את ההרשמה?')) return;
+  if (!confirm('למחוק את התשובה?')) return;
   registrations = registrations.filter(r => r.id !== id);
   localStorage.setItem('reunion_registrations', JSON.stringify(registrations));
   await sendToSheets({ id }, 'delete');
@@ -1127,19 +1196,32 @@ async function deleteReg(id) {
 
 function exportCSV() {
   if (registrations.length === 0) { alert('אין נתונים לייצא'); return; }
-  const headers = ['שם פרטי', 'שם משפחה', 'שם לשעבר', 'טלפון', 'תאריכים', 'בן/בת זוג', 'חסות', 'סוגי חסות', 'פרטי חסות', 'הערות', 'תאריך הרשמה', 'עודכן'];
+  const headers = ['שם פרטי','שם משפחה','שם לשעבר','טלפון','גמיש','חודשים','שבוע','ימים','שעות','תאריכים-זמין','תאריכים-לא-זמין','בן/בת זוג','חסות','סוגי חסות','פרטי חסות','הערות','תאריך הרשמה','עודכן'];
   const rows = registrations.map(r => {
-    const dates = r.dates.map(d => DATE_OPTIONS.find(o => o.id === d)?.display || d).join('; ');
-    const types = (r.sponsorship?.types || []).map(t => SPONSOR_LABELS[t] || t).join('; ');
-    return [r.firstName, r.lastName, r.originalName || '', r.phone, dates, {yes:'כן',no:'לא',maybe:'אולי'}[r.spouse] || '', r.sponsorship?.interested || 'לא', types, r.sponsorship?.details || '', r.notes || '', new Date(r.timestamp).toLocaleString('he-IL'), new Date(r.updatedAt || r.timestamp).toLocaleString('he-IL')];
+    const av = r.dates || {};
+    return [
+      r.firstName, r.lastName, r.originalName || '', r.phone,
+      av.flexible ? 'כן' : 'לא',
+      (av.months || []).map(m => MONTHS.find(x => x.key === m)?.label || m).join('; '),
+      (av.weeks || []).map(w => WEEK_LABELS[w]).join('; '),
+      (av.days || []).map(d => DAY_NAMES[parseInt(d)]).join('; '),
+      (av.times || []).map(t => TIME_LABELS[t]).join('; '),
+      (av.specificDates || []).join('; '),
+      (av.blackoutDates || []).join('; '),
+      {yes:'כן',no:'לא',maybe:'אולי'}[r.spouse] || '',
+      r.sponsorship?.interested || 'לא',
+      (r.sponsorship?.types || []).map(t => SPONSOR_LABELS[t] || t).join('; '),
+      r.sponsorship?.details || '',
+      r.notes || '',
+      new Date(r.timestamp).toLocaleString('he-IL'),
+      new Date(r.updatedAt || r.timestamp).toLocaleString('he-IL')
+    ];
   });
   const csv = '﻿' + [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = `reunion_${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
+  a.href = url; a.download = `reunion_${new Date().toISOString().slice(0,10)}.csv`; a.click();
   URL.revokeObjectURL(url);
 }
 
@@ -1147,47 +1229,23 @@ function exportJSON() {
   const blob = new Blob([JSON.stringify(registrations, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = `reunion_backup_${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
+  a.href = url; a.download = `reunion_backup_${new Date().toISOString().slice(0,10)}.json`; a.click();
   URL.revokeObjectURL(url);
 }
 
 async function manualRefresh() {
   if (!GOOGLE_SHEETS_URL) { alert('האתר לא מחובר ל-Google Sheets'); return; }
-  await syncFromSheets();
-  renderAdmin();
+  await syncFromSheets(); renderAdmin();
   alert('הנתונים עודכנו!');
 }
 
-function importJSON() { document.getElementById('importInput').click(); }
-
-function handleImport(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    try {
-      const data = JSON.parse(ev.target.result);
-      if (!Array.isArray(data)) throw new Error();
-      if (!confirm(`לשחזר ${data.length} הרשמות?`)) return;
-      registrations = data;
-      localStorage.setItem('reunion_registrations', JSON.stringify(registrations));
-      renderAdmin();
-      alert('שוחזר בהצלחה!');
-    } catch { alert('קובץ לא תקין'); }
-  };
-  reader.readAsText(file);
-}
-
 function clearAll() {
-  if (!confirm('למחוק את כל ההרשמות?')) return;
-  if (!confirm('בטוח לגמרי?')) return;
+  if (!confirm('למחוק את כל התשובות מקומית?')) return;
+  if (!confirm('בטוח לגמרי? (זה לא מוחק מהגיליון)')) return;
   registrations = [];
   localStorage.removeItem('reunion_registrations');
   localStorage.removeItem('reunion_my_id');
-  renderAdmin();
-  updatePublicStats();
+  renderAdmin(); updateLiveResults();
 }
 
 init();
