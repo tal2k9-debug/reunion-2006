@@ -326,6 +326,35 @@
     border-radius: 12px; padding: 12px 16px; font-size: 13px; color: var(--text-muted); margin-bottom: 16px;
   }
 
+  /* Registered view */
+  .registered-view {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: 24px; padding: 28px; margin: 30px 0;
+    display: none;
+  }
+  .registered-view.show { display: block; }
+  .registered-header { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .registered-emoji { font-size: 42px; }
+  .registered-text { flex: 1; min-width: 200px; }
+  .registered-title { font-weight: 700; font-size: 20px; margin-bottom: 4px; }
+  .registered-sub { font-size: 14px; color: var(--text-muted); }
+  .btn-edit-answers {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white; border: none; padding: 14px 22px; border-radius: 12px;
+    cursor: pointer; font-family: inherit; font-size: 15px; font-weight: 700;
+    display: flex; align-items: center; gap: 10px;
+    transition: all 0.2s;
+  }
+  .btn-edit-answers:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4); }
+  .registered-summary {
+    margin-top: 20px; padding-top: 20px;
+    border-top: 1px solid rgba(16, 185, 129, 0.2);
+    font-size: 14px; color: var(--text-muted);
+  }
+  .summary-item { display: flex; gap: 10px; margin-bottom: 6px; }
+  .summary-label { font-weight: 600; color: var(--text); min-width: 80px; }
+
   /* Gallery */
   .gallery-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
   .btn-upload {
@@ -337,15 +366,6 @@
     transition: all 0.2s; font-family: inherit;
   }
   .btn-upload:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4); }
-  .btn-download-all {
-    flex: 1; min-width: 200px;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    color: white; border: none;
-    padding: 16px 20px; border-radius: 14px; font-size: 16px; font-weight: 700;
-    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
-    transition: all 0.2s; font-family: inherit;
-  }
-  .btn-download-all:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4); }
   .btn-refresh-gallery {
     background: var(--bg-card); border: 1px solid var(--border); color: var(--text);
     width: 50px; height: 50px; border-radius: 14px; cursor: pointer;
@@ -357,15 +377,6 @@
     border-radius: 12px; padding: 14px 18px; font-size: 13px; color: var(--text-muted); margin-bottom: 16px;
   }
   .gallery-wrapper { border-radius: 16px; overflow: hidden; }
-  .download-tip {
-    background: var(--bg-card); border: 1px solid rgba(99, 102, 241, 0.3);
-    border-radius: 14px; padding: 16px 20px; margin-top: 16px;
-    font-size: 14px;
-  }
-  .download-tip kbd {
-    background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
-    padding: 2px 6px; font-family: monospace; font-size: 12px;
-  }
 </style>
 </head>
 <body>
@@ -381,7 +392,7 @@
     <div class="badge">🎓 פגישת מחזור • 20 שנה</div>
     <h1>נפגשים שוב.<br>בוא נמצא את התאריך הטוב ביותר.</h1>
     <p class="subtitle">ענה איך שנוח לך - חודש, שבוע, יום או תאריך ספציפי. המערכת תחשב את התאריך שמתאים לרוב</p>
-    <div class="edit-existing-link">
+    <div class="edit-existing-link" id="editExistingLink">
       <a onclick="openEditExisting()">כבר נרשמתי - אני רוצה לעדכן את התשובות ↻</a>
     </div>
   </header>
@@ -393,6 +404,22 @@
       <div class="welcome-back-sub">התשובות הקודמות שלך נטענו. שנה מה שתרצה ולחץ שמור.</div>
     </div>
     <button class="btn" onclick="cancelEdit()">בטל עריכה</button>
+  </div>
+
+  <!-- Registered user summary -->
+  <div class="registered-view" id="registeredView">
+    <div class="registered-header">
+      <div class="registered-emoji">✅</div>
+      <div class="registered-text">
+        <div class="registered-title" id="registeredTitle">היי! הצבעתך נקלטה ✨</div>
+        <div class="registered-sub">תוכל לחזור ולערוך את התשובות שלך בכל זמן</div>
+      </div>
+      <button class="btn-edit-answers" onclick="startEdit()">
+        <span style="font-size: 20px;">✏️</span>
+        <span>ערוך את התשובות שלי</span>
+      </button>
+    </div>
+    <div class="registered-summary" id="registeredSummary"></div>
   </div>
 
   <!-- ===== Live Results ===== -->
@@ -625,18 +652,14 @@
         <span style="font-size: 22px;">📤</span>
         <span>העלה תמונות שלך</span>
       </button>
-      <button class="btn btn-download-all" onclick="openDriveDownloadAll()">
-        <span style="font-size: 22px;">📥</span>
-        <span>הורד את כל התמונות (ZIP)</span>
-      </button>
       <button class="btn btn-refresh-gallery" onclick="refreshGallery()" title="רענן">
         <span style="font-size: 18px;">🔄</span>
       </button>
     </div>
 
     <div class="gallery-info">
-      💡 <strong>איך זה עובד:</strong> לחיצה על "העלה תמונות" תפתח את התיקייה בגוגל דרייב.
-      תוכל לגרור תמונות לתוך החלון או ללחוץ "חדש → העלאת קובץ". התמונות יופיעו כאן אוטומטית תוך כמה שניות.
+      💡 <strong>איך זה עובד:</strong> לחיצה על "העלה תמונות" תפתח את התיקייה ב-Drive.
+      להורדת תמונה ספציפית - לחץ עליה כדי לפתוח אותה ב-Drive ושם תוכל להוריד.
     </div>
 
     <div class="gallery-wrapper">
@@ -648,16 +671,6 @@
       </iframe>
     </div>
 
-    <div class="download-tip" id="downloadTip" style="display:none;">
-      <strong>💾 איך מורידים את כל התמונות:</strong>
-      <ol style="margin-right: 20px; margin-top: 8px;">
-        <li>החלון של Drive נפתח בלשונית חדשה</li>
-        <li>לחץ <kbd>Ctrl + A</kbd> לבחירת הכל (או <kbd>Cmd + A</kbd> במק)</li>
-        <li>לחץ קליק ימני → "הורד" (Download)</li>
-        <li>Google יארוז את כל התמונות לקובץ ZIP אחד 🎁</li>
-      </ol>
-      <button class="btn" onclick="document.getElementById('downloadTip').style.display='none'" style="margin-top:10px;">הבנתי, סגור</button>
-    </div>
   </section>
 
   <div class="admin-link"><a onclick="showAdmin(event)">פאנל ניהול</a></div>
@@ -737,10 +750,6 @@ const DRIVE_FOLDER_URL = `https://drive.google.com/drive/folders/${DRIVE_FOLDER_
 const DRIVE_EMBED_URL = `https://drive.google.com/embeddedfolderview?id=${DRIVE_FOLDER_ID}#grid`;
 
 function openDriveUpload() {
-  window.open(DRIVE_FOLDER_URL, '_blank');
-}
-function openDriveDownloadAll() {
-  document.getElementById('downloadTip').style.display = 'block';
   window.open(DRIVE_FOLDER_URL, '_blank');
 }
 function refreshGallery() {
@@ -834,12 +843,17 @@ async function init() {
   setupSponsorTypes();
   updateLiveResults();
   await syncFromSheets();
-  const savedId = localStorage.getItem('reunion_my_id');
-  if (savedId) {
-    const existing = registrations.find(r => r.id === savedId);
-    if (existing) loadIntoForm(existing, false);
-  }
+  checkRegisteredUser();
   if (GOOGLE_SHEETS_URL) setInterval(syncFromSheets, 30000);
+}
+
+function checkRegisteredUser() {
+  const savedId = localStorage.getItem('reunion_my_id');
+  if (!savedId) return;
+  const existing = registrations.find(r => r.id === savedId);
+  if (existing) {
+    showRegisteredView(existing);
+  }
 }
 
 function renderMonths() {
@@ -936,9 +950,56 @@ function formatNiceDate(d) {
 }
 
 // ============ Load existing ============
+function showRegisteredView(reg) {
+  const av = reg.dates || {};
+  const parts = [];
+  if (av.flexible) parts.push('🎲 גמיש - כל תאריך');
+  else {
+    if (av.months?.length) parts.push('📅 ' + av.months.map(m => MONTHS.find(x => x.key === m)?.label || m).join(', '));
+    if (av.days?.length) parts.push('📆 ' + av.days.map(d => DAY_NAMES[parseInt(d)]).join(', '));
+    if (av.times?.length) parts.push('⏰ ' + av.times.map(t => TIME_LABELS[t]).join(', '));
+    if (av.specificDates?.length) parts.push('✅ ' + av.specificDates.length + ' תאריכים ספציפיים');
+    if (av.blackoutDates?.length) parts.push('❌ ' + av.blackoutDates.length + ' תאריכים חסומים');
+  }
+  const loc = LOCATION_LABELS[reg.location || av.location];
+  if (loc) parts.push('📍 ' + loc);
+  const spouseTxt = { yes: 'מגיע עם בן/בת זוג', no: 'מגיע לבד', maybe: 'עדיין לא יודע אם עם בן/בת זוג' }[reg.spouse];
+  if (spouseTxt) parts.push('👫 ' + spouseTxt);
+  if (reg.sponsorship?.interested === 'yes') parts.push('💎 מעוניין בחסות');
+  else if (reg.sponsorship?.interested === 'maybe') parts.push('💎 אולי חסות');
+
+  document.getElementById('registeredTitle').textContent = `היי ${reg.firstName}! הצבעתך נקלטה ✨`;
+  document.getElementById('registeredSummary').innerHTML = parts.map(p =>
+    `<div class="summary-item">${p}</div>`
+  ).join('');
+
+  document.getElementById('registeredView').classList.add('show');
+  document.getElementById('formContainer').style.display = 'none';
+  document.getElementById('welcomeBack').classList.remove('show');
+  const link = document.getElementById('editExistingLink');
+  if (link) link.style.display = 'none';
+}
+
+function hideRegisteredView() {
+  document.getElementById('registeredView').classList.remove('show');
+  document.getElementById('formContainer').style.display = 'block';
+  const link = document.getElementById('editExistingLink');
+  if (link) link.style.display = '';
+}
+
+function startEdit() {
+  const savedId = localStorage.getItem('reunion_my_id');
+  if (!savedId) return;
+  const existing = registrations.find(r => r.id === savedId);
+  if (!existing) return;
+  hideRegisteredView();
+  loadIntoForm(existing, false);
+  document.querySelector('h2')?.scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+
 function loadIntoForm(reg, isViaSearch) {
   editingId = reg.id;
-  const av = reg.availability || {};
+  const av = reg.availability || reg.dates || {};
   isFlexible = !!av.flexible;
   selMonths = new Set(av.months || []);
   selWeeks = new Set(av.weeks || []);
@@ -978,7 +1039,11 @@ function loadIntoForm(reg, isViaSearch) {
   document.getElementById('welcomeBack').classList.add('show');
   document.getElementById('submitBtnText').textContent = 'עדכן את התשובות 💾';
 
-  if (isViaSearch) { closeEditModal(); window.scrollTo({top: 0, behavior: 'smooth'}); }
+  if (isViaSearch) {
+    closeEditModal();
+    hideRegisteredView();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
 }
 
 function cancelEdit() {
@@ -1090,6 +1155,13 @@ async function submitForm() {
   document.getElementById('successMsg').classList.add('show');
   updateLiveResults();
   window.scrollTo({top: 0, behavior: 'smooth'});
+
+  // After 3 seconds - show the registered view (clean state)
+  setTimeout(() => {
+    document.getElementById('successMsg').classList.remove('show');
+    showRegisteredView(record);
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }, 3500);
 }
 
 function resetForm() { cancelEdit(); document.getElementById('formContainer').style.display = 'block'; document.getElementById('successMsg').classList.remove('show'); window.scrollTo({top: 0, behavior: 'smooth'}); }
