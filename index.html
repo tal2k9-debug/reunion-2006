@@ -215,6 +215,87 @@
   .added-date-row.blackout { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); }
   .added-date-remove { background: transparent; border: none; color: #ef4444; cursor: pointer; font-size: 18px; padding: 0 6px; }
 
+  /* === Visual Calendar (NEW) === */
+  .cal-legend {
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    margin-bottom: 14px; padding: 12px 14px;
+    background: rgba(99, 102, 241, 0.08); border-radius: 12px;
+    font-size: 13px; color: var(--text-muted);
+  }
+  .cal-legend-item { display: inline-flex; align-items: center; gap: 6px; }
+  .cal-legend-dot {
+    width: 14px; height: 14px; border-radius: 4px; border: 1.5px solid var(--border);
+    display: inline-block;
+  }
+  .cal-legend-dot.specific { background: rgba(16, 185, 129, 0.5); border-color: var(--success); }
+  .cal-legend-dot.blackout { background: rgba(239, 68, 68, 0.5); border-color: #ef4444; }
+  .cal-legend-dot.wide-match { background: rgba(16, 185, 129, 0.18); border-color: rgba(16, 185, 129, 0.4); }
+  .cal-legend-dot.holiday { background: rgba(120, 120, 120, 0.3); border-color: var(--border); }
+
+  .calendars-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  @media (max-width: 700px) { .calendars-container { grid-template-columns: 1fr; } }
+
+  .cal-month-card {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px;
+  }
+  .cal-month-title {
+    font-weight: 700; font-size: 15px; text-align: center; margin-bottom: 10px;
+    color: var(--text);
+  }
+  .cal-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+    direction: rtl;
+  }
+  .cal-dow {
+    text-align: center; font-size: 11px; color: var(--text-muted);
+    padding: 4px 0; font-weight: 700;
+  }
+  .cal-cell {
+    aspect-ratio: 1; min-height: 36px;
+    border-radius: 8px; border: 1.5px solid var(--border);
+    background: var(--bg-card); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: var(--text);
+    transition: transform 0.12s, box-shadow 0.12s, background 0.12s;
+    position: relative; user-select: none;
+  }
+  .cal-cell:hover:not(.cal-empty):not(.cal-holiday) {
+    transform: scale(1.08); border-color: var(--primary);
+    z-index: 2;
+  }
+  .cal-empty { background: transparent; border: none; cursor: default; }
+  .cal-holiday {
+    background: rgba(120, 120, 120, 0.18); color: var(--text-muted);
+    cursor: not-allowed; text-decoration: line-through;
+  }
+  .cal-wide-match {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.35);
+  }
+  .cal-specific {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.55), rgba(16, 185, 129, 0.35));
+    border-color: var(--success); color: white;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.45);
+  }
+  .cal-specific::after {
+    content: '⭐'; position: absolute; top: -4px; left: -4px;
+    font-size: 10px; line-height: 1;
+  }
+  .cal-blackout {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.55), rgba(239, 68, 68, 0.35));
+    border-color: #ef4444; color: white;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.45);
+  }
+  .cal-blackout::after {
+    content: '❌'; position: absolute; top: -4px; left: -4px;
+    font-size: 10px; line-height: 1;
+  }
+  @media (max-width: 600px) {
+    .cal-cell { min-height: 32px; font-size: 12px; }
+    .cal-month-card { padding: 10px; }
+  }
+
   /* Stats preview */
   .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; }
   @media (max-width: 600px) { .stats-row { grid-template-columns: 1fr; } }
@@ -615,54 +696,21 @@
           </div>
         </div>
 
-        <!-- Q5: Specific dates -->
+        <!-- Q5: Visual Calendar (replaces old specific/range/blackout date pickers) -->
         <div class="survey-step">
-          <h3>✅ תאריכים ספציפיים שאני זמין/ה (אופציונלי)</h3>
-          <div class="hint">למשל: יש לי חופש ב-15/10</div>
-          <div class="date-input-row">
-            <input type="date" id="specificDateInput" min="2026-07-01" max="2026-12-31">
-            <button class="btn-add-date" onclick="addSpecificDate()">+ הוסף</button>
+          <h3>📅 לוח שנה — דייקו את הזמינות שלכם (אופציונלי)</h3>
+          <div class="hint">
+            לא חייבים לסמן כלום בלוח — אם בחרתם חודש/יום למעלה זה מספיק.<br>
+            רוצים לדייק? לחצו על תאריך:
           </div>
-          <div class="added-dates" id="specificDatesList"></div>
-        </div>
-
-        <!-- Q5b: Date ranges -->
-        <div class="survey-step">
-          <h3>🗓️ טווח תאריכים שאני זמין/ה (אופציונלי)</h3>
-          <div class="hint">למשל: זמין מ-10/10 עד 20/10 (חופשה, סופ"ש מורחב וכו')</div>
-          <div class="date-input-row date-range-row">
-            <span style="color: var(--text-muted); font-size: 13px;">מתאריך</span>
-            <input type="date" id="rangeFromInput" min="2026-07-01" max="2026-12-31">
-            <span style="color: var(--text-muted); font-size: 13px;">עד תאריך</span>
-            <input type="date" id="rangeToInput" min="2026-07-01" max="2026-12-31">
-            <button class="btn-add-date" onclick="addDateRange()">+ הוסף</button>
+          <div class="cal-legend">
+            <div class="cal-legend-item"><span class="cal-legend-dot specific"></span>⭐ עדיף לי</div>
+            <div class="cal-legend-item"><span class="cal-legend-dot blackout"></span>❌ לא יכול</div>
+            <div class="cal-legend-item"><span class="cal-legend-dot wide-match"></span>מתאים לבחירה שלי למעלה</div>
+            <div class="cal-legend-item"><span class="cal-legend-dot holiday"></span>חג / לא ניתן</div>
+            <div class="cal-legend-item" style="opacity:.85; margin-right:auto;">קליק מסבב: רגיל → ⭐ ירוק → ❌ אדום → רגיל</div>
           </div>
-          <div class="added-dates" id="dateRangesList"></div>
-        </div>
-
-        <!-- Q6: Blackout dates -->
-        <div class="survey-step">
-          <h3>❌ תאריכים שאני בטוח לא זמין (אופציונלי)</h3>
-          <div class="hint">חתונה, חופשה, חו"ל - תאריכים שאסור לקבוע בהם</div>
-          <div class="date-input-row">
-            <input type="date" id="blackoutDateInput" min="2026-07-01" max="2026-12-31">
-            <button class="btn-add-date" onclick="addBlackoutDate()">+ הוסף</button>
-          </div>
-          <div class="added-dates" id="blackoutDatesList"></div>
-        </div>
-
-        <!-- Q6b: Blackout ranges -->
-        <div class="survey-step">
-          <h3>🚫 טווח תאריכים שאני לא זמין (אופציונלי)</h3>
-          <div class="hint">למשל: חופשה מ-10/12 עד 20/12, מילואים, וכו'</div>
-          <div class="date-input-row date-range-row">
-            <span style="color: var(--text-muted); font-size: 13px;">מתאריך</span>
-            <input type="date" id="blackoutRangeFromInput" min="2026-07-01" max="2026-12-31">
-            <span style="color: var(--text-muted); font-size: 13px;">עד תאריך</span>
-            <input type="date" id="blackoutRangeToInput" min="2026-07-01" max="2026-12-31">
-            <button class="btn-add-date" onclick="addBlackoutRange()">+ הוסף</button>
-          </div>
-          <div class="added-dates" id="blackoutRangesList"></div>
+          <div class="calendars-container" id="calendarsContainer"></div>
         </div>
 
       </div>
@@ -978,6 +1026,7 @@ async function init() {
   setupSpouseToggle();
   setupSponsorToggle();
   setupSponsorTypes();
+  renderCalendar();
   updateLiveResults();
   trackVisitorStats(); // visit counter + online users
   await syncFromSheets();
@@ -1138,9 +1187,9 @@ function renderMonths() {
   ).join('');
 }
 
-function toggleMonth(el) { toggleSet(el, 'month', selMonths); }
-function toggleWeek(el) { toggleSet(el, 'week', selWeeks); }
-function toggleDay(el) { toggleSet(el, 'day', selDays); }
+function toggleMonth(el) { toggleSet(el, 'month', selMonths); renderCalendar(); }
+function toggleWeek(el) { toggleSet(el, 'week', selWeeks); renderCalendar(); }
+function toggleDay(el) { toggleSet(el, 'day', selDays); renderCalendar(); }
 function toggleTime(el) { toggleSet(el, 'time', selTimes); }
 
 function toggleSet(el, attr, set) {
@@ -1153,6 +1202,115 @@ function toggleFlexible() {
   isFlexible = !isFlexible;
   document.getElementById('flexibleCard').classList.toggle('active', isFlexible);
   document.getElementById('surveyDetails').style.display = isFlexible ? 'none' : 'block';
+  renderCalendar();
+}
+
+// ============ VISUAL CALENDAR ============
+function getAllCalendarDates() {
+  const out = [];
+  for (let d = new Date('2026-07-01'); d <= new Date('2026-12-31'); d.setDate(d.getDate() + 1)) {
+    out.push(d.toISOString().split('T')[0]);
+  }
+  return out;
+}
+
+function computeWideMatches() {
+  // Dates that match the user's current wide-selection (months × weeks × days), excluding holidays.
+  // Returns a Set of YYYY-MM-DD. Empty if user has no wide-selection.
+  if (isFlexible) {
+    return new Set(getAllCalendarDates().filter(iso => !HOLIDAY_DATES.includes(iso)));
+  }
+  const hasAny = selMonths.size > 0 || selWeeks.size > 0 || selDays.size > 0;
+  if (!hasAny) return new Set();
+  const out = new Set();
+  getAllCalendarDates().forEach(iso => {
+    if (HOLIDAY_DATES.includes(iso)) return;
+    const d = new Date(iso);
+    const m = iso.substring(0, 7);
+    const dow = String(d.getDay());
+    const wp = getWeekOfMonth(iso);
+    if (selMonths.size > 0 && !selMonths.has(m)) return;
+    if (selWeeks.size > 0 && !selWeeks.has(wp)) return;
+    if (selDays.size > 0 && !selDays.has(dow)) return;
+    out.add(iso);
+  });
+  return out;
+}
+
+function expandRangeDates(ranges) {
+  // Backward-compat: visualize legacy dateRanges/blackoutRanges. No new UI to edit them.
+  const out = new Set();
+  (ranges || []).forEach(r => {
+    if (!r || !r.from || !r.to) return;
+    for (let d = new Date(r.from); d <= new Date(r.to); d.setDate(d.getDate() + 1)) {
+      out.add(d.toISOString().split('T')[0]);
+    }
+  });
+  return out;
+}
+
+function buildMonthCard(monthKey, monthLabel, monthEmoji, wideMatches, rangeSpec, rangeBlack) {
+  const [year, mon] = monthKey.split('-').map(Number);
+  const firstDow = new Date(year, mon - 1, 1).getDay();
+  const lastDay = new Date(year, mon, 0).getDate();
+  const dowNames = ["א'", "ב'", "ג'", "ד'", "ה'", "ו'", "ש'"];
+
+  let cells = dowNames.map(n => `<div class="cal-dow">${n}</div>`).join('');
+  for (let i = 0; i < firstDow; i++) cells += '<div class="cal-cell cal-empty"></div>';
+
+  for (let day = 1; day <= lastDay; day++) {
+    const iso = `${year}-${String(mon).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const isHoliday = HOLIDAY_DATES.includes(iso);
+    const isSpec = specificDates.includes(iso) || rangeSpec.has(iso);
+    const isBlack = blackoutDates.includes(iso) || rangeBlack.has(iso);
+    const isMatch = wideMatches.has(iso);
+
+    const classes = ['cal-cell'];
+    if (isHoliday) classes.push('cal-holiday');
+    else if (isBlack) classes.push('cal-blackout');
+    else if (isSpec) classes.push('cal-specific');
+    else if (isMatch) classes.push('cal-wide-match');
+
+    const title = isHoliday ? 'חג, לא ניתן לבחור' :
+                  isBlack ? `${iso} — ❌ לא יכול (לחיצה תאפס)` :
+                  isSpec  ? `${iso} — ⭐ עדיף לי (לחיצה תהפוך לאדום)` :
+                  isMatch ? `${iso} — מתאים לבחירה שלך למעלה` :
+                  iso;
+    const onclick = isHoliday ? '' : `onclick="handleDayClick('${iso}')"`;
+    cells += `<div class="${classes.join(' ')}" ${onclick} title="${title}" data-date="${iso}">${day}</div>`;
+  }
+
+  return `
+    <div class="cal-month-card">
+      <div class="cal-month-title">${monthEmoji} ${monthLabel}</div>
+      <div class="cal-grid">${cells}</div>
+    </div>`;
+}
+
+function renderCalendar() {
+  const container = document.getElementById('calendarsContainer');
+  if (!container) return;
+  const wideMatches = computeWideMatches();
+  const rangeSpec = expandRangeDates(dateRanges);
+  const rangeBlack = expandRangeDates(blackoutRanges);
+  container.innerHTML = MONTHS.map(m =>
+    buildMonthCard(m.key, m.label, m.emoji, wideMatches, rangeSpec, rangeBlack)
+  ).join('');
+}
+
+function handleDayClick(iso) {
+  if (HOLIDAY_DATES.includes(iso)) return;
+  const isSpec = specificDates.includes(iso);
+  const isBlack = blackoutDates.includes(iso);
+  if (!isSpec && !isBlack) {
+    specificDates.push(iso);
+  } else if (isSpec) {
+    specificDates = specificDates.filter(d => d !== iso);
+    blackoutDates.push(iso);
+  } else if (isBlack) {
+    blackoutDates = blackoutDates.filter(d => d !== iso);
+  }
+  renderCalendar();
 }
 
 function setupSpouseToggle() {
@@ -1185,74 +1343,6 @@ function setupSponsorTypes() {
       else { selSponsorTypes.add(val); el.classList.add('selected'); }
     };
   });
-}
-
-// ============ Dates list management ============
-function addSpecificDate() {
-  const val = document.getElementById('specificDateInput').value;
-  if (!val) return;
-  if (specificDates.includes(val)) { alert('כבר הוספת את התאריך'); return; }
-  specificDates.push(val);
-  document.getElementById('specificDateInput').value = '';
-  renderDateList('specificDatesList', specificDates, 'removeSpecificDate', false);
-}
-function removeSpecificDate(idx) { specificDates.splice(idx, 1); renderDateList('specificDatesList', specificDates, 'removeSpecificDate', false); }
-function addBlackoutDate() {
-  const val = document.getElementById('blackoutDateInput').value;
-  if (!val) return;
-  if (blackoutDates.includes(val)) { alert('כבר הוספת את התאריך'); return; }
-  blackoutDates.push(val);
-  document.getElementById('blackoutDateInput').value = '';
-  renderDateList('blackoutDatesList', blackoutDates, 'removeBlackoutDate', true);
-}
-function removeBlackoutDate(idx) { blackoutDates.splice(idx, 1); renderDateList('blackoutDatesList', blackoutDates, 'removeBlackoutDate', true); }
-
-function addDateRange() {
-  const from = document.getElementById('rangeFromInput').value;
-  const to = document.getElementById('rangeToInput').value;
-  if (!from || !to) { alert('יש לבחור גם תאריך התחלה וגם תאריך סיום'); return; }
-  if (from > to) { alert('תאריך הסיום חייב להיות אחרי תאריך ההתחלה'); return; }
-  if (dateRanges.some(r => r.from === from && r.to === to)) { alert('כבר הוספת את הטווח הזה'); return; }
-  dateRanges.push({ from, to });
-  document.getElementById('rangeFromInput').value = '';
-  document.getElementById('rangeToInput').value = '';
-  renderDateRanges();
-}
-function removeDateRange(idx) { dateRanges.splice(idx, 1); renderDateRanges(); }
-function renderDateRanges() {
-  document.getElementById('dateRangesList').innerHTML = dateRanges.map((r, i) =>
-    `<div class="added-date-row">
-      <span>${formatNiceDate(r.from)} ← ${formatNiceDate(r.to)}</span>
-      <button class="added-date-remove" onclick="removeDateRange(${i})">×</button>
-    </div>`).join('');
-}
-
-function addBlackoutRange() {
-  const from = document.getElementById('blackoutRangeFromInput').value;
-  const to = document.getElementById('blackoutRangeToInput').value;
-  if (!from || !to) { alert('יש לבחור גם תאריך התחלה וגם תאריך סיום'); return; }
-  if (from > to) { alert('תאריך הסיום חייב להיות אחרי תאריך ההתחלה'); return; }
-  if (blackoutRanges.some(r => r.from === from && r.to === to)) { alert('כבר הוספת את הטווח הזה'); return; }
-  blackoutRanges.push({ from, to });
-  document.getElementById('blackoutRangeFromInput').value = '';
-  document.getElementById('blackoutRangeToInput').value = '';
-  renderBlackoutRanges();
-}
-function removeBlackoutRange(idx) { blackoutRanges.splice(idx, 1); renderBlackoutRanges(); }
-function renderBlackoutRanges() {
-  document.getElementById('blackoutRangesList').innerHTML = blackoutRanges.map((r, i) =>
-    `<div class="added-date-row blackout">
-      <span>${formatNiceDate(r.from)} ← ${formatNiceDate(r.to)}</span>
-      <button class="added-date-remove" onclick="removeBlackoutRange(${i})">×</button>
-    </div>`).join('');
-}
-
-function renderDateList(elId, list, removeFn, blackout) {
-  document.getElementById(elId).innerHTML = list.map((d, i) =>
-    `<div class="added-date-row ${blackout ? 'blackout' : ''}">
-      <span>${formatNiceDate(d)}</span>
-      <button class="added-date-remove" onclick="${removeFn}(${i})">×</button>
-    </div>`).join('');
 }
 
 function formatNiceDate(d) {
@@ -1344,10 +1434,7 @@ function loadIntoForm(reg, isViaSearch) {
   document.querySelectorAll('[data-week]').forEach(el => el.classList.toggle('selected', selWeeks.has(el.dataset.week)));
   document.querySelectorAll('[data-day]').forEach(el => el.classList.toggle('selected', selDays.has(el.dataset.day)));
   document.querySelectorAll('[data-time]').forEach(el => el.classList.toggle('selected', selTimes.has(el.dataset.time)));
-  renderDateList('specificDatesList', specificDates, 'removeSpecificDate', false);
-  renderDateList('blackoutDatesList', blackoutDates, 'removeBlackoutDate', true);
-  renderDateRanges();
-  renderBlackoutRanges();
+  renderCalendar();
 
   document.querySelectorAll('#spouseToggle .toggle-option').forEach(e => e.classList.toggle('selected', e.dataset.value === selSpouse));
   document.querySelectorAll('[data-location]').forEach(e => e.classList.toggle('selected', e.dataset.location === selLocation));
@@ -1382,10 +1469,7 @@ function cancelEdit() {
   document.getElementById('sponsorDetails').classList.remove('show');
   document.getElementById('welcomeBack').classList.remove('show');
   document.getElementById('submitBtnText').textContent = 'שלחו את התשובות ✨';
-  document.getElementById('specificDatesList').innerHTML = '';
-  document.getElementById('dateRangesList').innerHTML = '';
-  document.getElementById('blackoutRangesList').innerHTML = '';
-  document.getElementById('blackoutDatesList').innerHTML = '';
+  renderCalendar();
   // Restore the edit link visibility for the form view
   const eLink = document.getElementById('editExistingLink');
   if (eLink) eLink.style.display = '';
